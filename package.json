@@ -1,0 +1,25 @@
+{
+  "name": "pasync",
+  "version": "0.1.0",
+  "description": "Promise-oriented async",
+  "main": "./lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:crispy1989/pasync.git"
+  },
+  "scripts": {
+    "test": "node ./node_modules/mocha/bin/mocha ./test -R spec",
+    "lint": "node ./node_modules/jshint/bin/jshint --reporter unix --exclude ./node_modules . || exit 0",
+    "watch": "node ./node_modules/mocha/bin/mocha --watch ./test -R spec"
+  },
+  "dependencies": {
+    "async": "^0.9.0",
+    "es6-promise": "^2.0.1",
+    "neo-async": "^0.6.2"
+  },
+  "devDependencies": {
+    "chai": "^2.0.0",
+    "jshint": "^2.6.0",
+    "mocha": "^2.1.0"
+  }
+}
