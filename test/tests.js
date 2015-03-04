@@ -432,4 +432,89 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('series with undefined error', function(done) {
+		var a = false, b = false;
+		var funcs = [
+			function() {
+				return new Promise(function(resolve) {
+					a = true;
+					resolve();
+				});
+			},
+			function() {
+				return new Promise(function(resolve, reject) {
+					b = true;
+					reject();
+				});
+			}
+		];
+		pasync.series(funcs).then(function() {
+			done(new Error('Should not succeed'));
+		}, function(err) {
+			expect(err).to.not.exist;
+			done();
+		}).catch(done);
+	});
+
+	it('parallel', function(done) {
+		var a = false, b = false;
+		var funcs = [
+			function() {
+				return new Promise(function(resolve) {
+					a = true;
+					resolve();
+				});
+			},
+			function() {
+				return new Promise(function(resolve) {
+					b = true;
+					resolve();
+				});
+			}
+		];
+		pasync.parallel(funcs).then(function() {
+			expect(a).to.be.true;
+			expect(b).to.be.true;
+			done();
+		}).catch(done);
+	});
+
+	it('parallelLimit', function(done) {
+		var a = false, b = false;
+		var funcs = [
+			function() {
+				return new Promise(function(resolve) {
+					a = true;
+					resolve();
+				});
+			},
+			function() {
+				return new Promise(function(resolve) {
+					b = true;
+					resolve();
+				});
+			}
+		];
+		pasync.parallelLimit(funcs, 1).then(function() {
+			expect(a).to.be.true;
+			expect(b).to.be.true;
+			done();
+		}).catch(done);
+	});
+
+	it('whilst', function(done) {
+		var ctr = 0;
+		pasync.whilst(function() {
+			return ctr < 10;
+		}, function() {
+			return new Promise(function(resolve) {
+				ctr++;
+				resolve();
+			});
+		}).then(function() {
+			expect(ctr).to.equal(10);
+			done();
+		}).catch(done);
+	});
+
 });
