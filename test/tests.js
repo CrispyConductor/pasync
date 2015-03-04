@@ -37,7 +37,7 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
-	it('each with errors', function(done) {
+	it('each with error', function(done) {
 		var arr = [1, 2, 3];
 		pasync.each(arr, function() {
 			return new Promise(function(resolve, reject) {
@@ -53,7 +53,23 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
-	it('each with throws', function(done) {
+	it('each with undefined error', function(done) {
+		var arr = [1, 2, 3];
+		pasync.each(arr, function() {
+			return new Promise(function(resolve, reject) {
+				setImmediate(function() {
+					reject();
+				});
+			});
+		}).then(function() {
+			done(new Error('Should not succeed'));
+		}, function(err) {
+			expect(err).to.not.exist;
+			done();
+		}).catch(done);
+	});
+
+	it('each with throw', function(done) {
 		var arr = [1, 2, 3];
 		pasync.each(arr, function() {
 			throw 123;
@@ -365,6 +381,53 @@ describe('pasync', function() {
 			});
 		}).then(function(res) {
 			expect(res).to.deep.equal([1, 2, 3, 4]);
+			done();
+		}).catch(done);
+	});
+
+	it('series', function(done) {
+		var a = false, b = false;
+		var funcs = [
+			function() {
+				return new Promise(function(resolve) {
+					a = true;
+					resolve();
+				});
+			},
+			function() {
+				return new Promise(function(resolve) {
+					b = true;
+					resolve();
+				});
+			}
+		];
+		pasync.series(funcs).then(function() {
+			expect(a).to.be.true;
+			expect(b).to.be.true;
+			done();
+		}).catch(done);
+	});
+
+	it('series with error', function(done) {
+		var a = false, b = false;
+		var funcs = [
+			function() {
+				return new Promise(function(resolve) {
+					a = true;
+					resolve();
+				});
+			},
+			function() {
+				return new Promise(function(resolve, reject) {
+					b = true;
+					reject(123);
+				});
+			}
+		];
+		pasync.series(funcs).then(function() {
+			done(new Error('Should not succeed'));
+		}, function(err) {
+			expect(err).to.equal(123);
 			done();
 		}).catch(done);
 	});
