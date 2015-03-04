@@ -517,4 +517,86 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('doWhilst', function(done) {
+		var ctr = 0;
+		pasync.doWhilst(function() {
+			return new Promise(function(resolve) {
+				ctr++;
+				resolve();
+			});
+		}, function() {
+			return ctr < 10;
+		}).then(function() {
+			expect(ctr).to.equal(10);
+			done();
+		}).catch(done);
+	});
+
+	it('until', function(done) {
+		var ctr = 0;
+		pasync.until(function() {
+			return ctr === 10;
+		}, function() {
+			return new Promise(function(resolve) {
+				ctr++;
+				resolve();
+			});
+		}).then(function() {
+			expect(ctr).to.equal(10);
+			done();
+		}).catch(done);
+	});
+
+	it('doUntil', function(done) {
+		var ctr = 0;
+		pasync.doUntil(function() {
+			return new Promise(function(resolve) {
+				ctr++;
+				resolve();
+			});
+		}, function() {
+			return ctr === 10;
+		}).then(function() {
+			expect(ctr).to.equal(10);
+			done();
+		}).catch(done);
+	});
+
+	it('forever', function(done) {
+		var ctr = 0;
+		pasync.forever(function() {
+			return new Promise(function(resolve, reject) {
+				ctr++;
+				if(ctr > 10) {
+					reject(123);
+				} else {
+					resolve();
+				}
+			});
+		}).then(function() {
+			done(new Error('Should not succeed'));
+		}, function(err) {
+			expect(err).to.equal(123);
+			expect(ctr).to.equal(11);
+			done();
+		}).catch(done);
+	});
+
+	it('waterfall', function(done) {
+		pasync.waterfall([
+			function() {
+				return 1;
+			}, function(res) {
+				return res + 5;
+			}, function(res) {
+				return new Promise(function(resolve, reject) {
+					resolve(res + 11);
+				});
+			}
+		]).then(function(res) {
+			expect(res).to.equal(17);
+			done();
+		}).catch(done);
+	});
+
 });
