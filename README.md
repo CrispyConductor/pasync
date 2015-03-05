@@ -25,38 +25,63 @@ have error handling, such as `async.filter` .
 
 ## Implemented Functions
 
-* each
-* eachSeries
-* eachLimit
-* map
-* mapSeries
-* mapLimit
-* filter
-* select
-* filterSeries
-* selectSeries
-* reject
-* rejectSeries
-* reduce
-* inject
+### Collections
+x* each
+x* eachSeries
+x* eachLimit
+x* map
+x* mapSeries
+x* mapLimit
+x* filter
+* select --Alias for filter?
+x* filterSeries
+* selectSeries --Alias for filterSeries?
+x* reject
+x* rejectSeries
+x* reduce
+* inject --where?
 * foldl
-* reduceRight
+x* reduceRight
 * foldr
-* detect
-* detectSeries
-* sortBy
-* some
-* every
-* concat
-* concatSeries
-* series
-* parallel
-* parallelLimit
-* whilst
-* doWhilst
-* until
-* doUntil
-* forever
-* waterfall
+x* detect
+x* detectSeries
+x* sortBy
+x* some
+x* every
+x* concat
+x* concatSeries
 
+### Control Flow
+x* series
+x* parallel
+x* parallelLimit
+x* whilst
+x* doWhilst
+x* until
+x* doUntil
+x* forever
+x* waterfall
 
+## //TODO
+### Collections
+* compose
+* seq
+* applyEach
+* applyEachSeries
+* queue
+* priorityQueue
+* cargo
+* auto
+* retry
+* iterator
+* apply
+* nextTick
+* times
+* timesSeries
+
+### Utils
+* memoize
+* unmemoize
+* log
+* dir
+* noConflict
