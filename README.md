@@ -50,8 +50,6 @@ have error handling, such as `async.filter` .
 * every
 * concat
 * concatSeries
-
-### Control Flow
 * series
 * parallel
 * parallelLimit
@@ -59,12 +57,12 @@ have error handling, such as `async.filter` .
 * doWhilst
 * until
 * doUntil
-
-## //TODO
-### Collections
 * compose
 * seq
 * applyEach
+
+## //TODO
+### Collections
 * applyEachSeries
 * queue
 * priorityQueue
@@ -83,3 +81,8 @@ have error handling, such as `async.filter` .
 * log
 * dir
 * noConflict
+* forever
+* waterfall
+* compose
+* seq
+* applyEach
