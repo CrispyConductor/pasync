@@ -599,4 +599,117 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('compose', function(done) {
+		var thisTest = {};
+		function mul2(n) {
+			return Promise.resolve(n * 2);
+		}
+		function mul3(n) {
+			expect(this).to.equal(thisTest);
+			return Promise.resolve(n * 3);
+		}
+		function mul4(n) {
+			return Promise.resolve(n * 4);
+		}
+		var composition = pasync.compose(mul2, mul3, mul4);
+		composition.call(thisTest, 2).then(function(result) {
+			expect(result).to.equal(48);
+			done();
+		}).catch(done);
+	});
+
+	it('compose with error', function(done) {
+		function mul2(n) {
+			return Promise.resolve(n * 2);
+		}
+		function mul3(n) {
+			return Promise.reject(123);
+		}
+		function mul4(n) {
+			return Promise.resolve(n * 4);
+		}
+		var composition = pasync.compose(mul2, mul3, mul4);
+		composition(2).then(function(result) {
+			done(new Error('Should not succeed'));
+		}, function(err) {
+			expect(err).to.equal(123);
+			done();
+		}).catch(done);
+	});
+
+	it('seq', function(done) {
+		var thisTest = {};
+		function mul2(n) {
+			return Promise.resolve(n * 2);
+		}
+		function mul3(n) {
+			expect(this).to.equal(thisTest);
+			return Promise.resolve(n * 3);
+		}
+		function mul4(n) {
+			return Promise.resolve(n * 4);
+		}
+		var composition = pasync.seq(mul2, mul3, mul4);
+		composition.call(thisTest, 2).then(function(result) {
+			expect(result).to.equal(48);
+			done();
+		}).catch(done);
+	});
+
+	it('applyEach', function(done) {
+		var resultArray = [];
+		function addStuff1(a, b) {
+			resultArray.push(a);
+			resultArray.push(b);
+			return Promise.resolve();
+		}
+		function addStuff2(a, b) {
+			resultArray.push(a);
+			resultArray.push(b);
+			return Promise.resolve();
+		}
+		function addStuff3(a, b) {
+			resultArray.push(a);
+			resultArray.push(b);
+			return Promise.resolve();
+		}
+		pasync.applyEach([
+			addStuff1,
+			addStuff2,
+			addStuff3
+		], 4, 5).then(function() {
+			expect(resultArray).to.deep.equal([4, 5, 4, 5, 4, 5]);
+			done();
+		}).catch(done);
+	});
+
+	it('applyEach with error', function(done) {
+		var resultArray = [];
+		function addStuff1(a, b) {
+			resultArray.push(a);
+			resultArray.push(b);
+			return Promise.resolve();
+		}
+		function addStuff2(a, b) {
+			resultArray.push(a);
+			resultArray.push(b);
+			return Promise.reject(123);
+		}
+		function addStuff3(a, b) {
+			resultArray.push(a);
+			resultArray.push(b);
+			return Promise.resolve();
+		}
+		pasync.applyEach([
+			addStuff1,
+			addStuff2,
+			addStuff3
+		], 4, 5).then(function() {
+			done(new Error('Should not succeed'));
+		}, function(err) {
+			expect(err).to.equal(123);
+			done();
+		}).catch(done);
+	});
+
 });
