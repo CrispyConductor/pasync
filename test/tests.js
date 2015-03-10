@@ -713,18 +713,20 @@ describe('pasync', function() {
 	});
 
 	it('queue', function(done) {
-		responseQueue = [];
-		var queue = pasync.queue(function(task, cb) {
-			responseQueue.push(task * 2);
-			cb();
+		var responseQueue = [];
+		var queue = pasync.queue(function(task) {
+			return new Promise(function(resolve, reject) {
+				responseQueue.push(task * 2);
+				resolve();
+			});
 		}, 2);
+
+		queue.unshift(1).catch(done);
+		queue.push([2, 3, 4, 5]).catch(done);
 
 		queue.drain = function() {
 			expect(responseQueue).to.deep.equal([2, 4, 6, 8, 10]);
 			done();
 		};
-
-		queue.unshift(1);
-		queue.push([2, 3, 4, 5]);
 	});
 });
