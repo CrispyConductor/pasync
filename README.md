@@ -57,6 +57,8 @@ have error handling, such as `async.filter` .
 * doWhilst
 * until
 * doUntil
+* forever
+* waterfall 
 * compose
 * seq
 * applyEach
