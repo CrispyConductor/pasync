@@ -61,4 +61,4 @@ have error handling, such as `async.filter` .
 * compose
 * seq
 * applyEach
-
+* queue
