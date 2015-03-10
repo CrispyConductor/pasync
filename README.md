@@ -17,7 +17,7 @@ pasync.mapLimit(userIds, 2, getUserById).then(function(users) {
 ```
 
 You can also return values instead of promises from the iterator functions, and these
-will be converted into resolved promises.  Eceptions thrown from iterator functions
+will be converted into resolved promises.  Exceptions thrown from iterator functions
 will be converted into rejected promises.
 
 Additionally, this implements error handling for async functions that don't natively
@@ -60,29 +60,4 @@ have error handling, such as `async.filter` .
 * compose
 * seq
 * applyEach
-
-## //TODO
-### Collections
 * applyEachSeries
-* queue
-* priorityQueue
-* cargo
-* auto
-* retry
-* iterator
-* apply
-* netTick
-* times
-* timesSeries
-
-### Utils
-* memoize
-* unmemoize
-* log
-* dir
-* noConflict
-* forever
-* waterfall
-* compose
-* seq
-* applyEach
