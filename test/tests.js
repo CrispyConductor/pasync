@@ -712,4 +712,19 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('queue', function(done) {
+		responseQueue = [];
+		var queue = pasync.queue(function(task, cb) {
+			responseQueue.push(task * 2);
+			cb();
+		}, 2);
+
+		queue.drain = function() {
+			expect(responseQueue).to.deep.equal([2, 4, 6, 8, 10]);
+			done();
+		};
+
+		queue.unshift(1);
+		queue.push([2, 3, 4, 5]);
+	});
 });
