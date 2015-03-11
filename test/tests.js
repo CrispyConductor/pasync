@@ -712,6 +712,52 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('queue', function(done) {
+		var responseQueue = [];
+		var queue = pasync.queue(function(task) {
+			return new Promise(function(resolve, reject) {
+				responseQueue.push(task * 2);
+				resolve();
+			});
+		}, 2);
+
+		queue.unshift(1).catch(done);
+		queue.push([2, 3, 4, 5]).catch(done);
+
+		queue.drain = function() {
+			expect(responseQueue).to.deep.equal([2, 4, 6, 8, 10]);
+			done();
+		};
+	});
+
+	it('queue with error', function(done) {
+		var responseQueue = [];
+		var queue = pasync.queue(function(task) {
+			return new Promise(function(resolve, reject) {
+				if(task === 4) {
+					reject(123);	
+				} else {
+					responseQueue.push(task * 2);
+					resolve();
+				}
+			});
+		}, 2);
+
+		queue.unshift(1).catch(done);
+		queue.push([2, 3]).catch(done);
+		queue.push(4).then(function() {
+			throw new Error('should not reach');
+		}, function(err) {
+			expect(err).to.equal(123);
+		}).catch(done);
+		queue.push(5).catch(done);
+
+		queue.drain = function() {
+			expect(responseQueue).to.deep.equal([2, 4, 6, 10]);
+			done();
+		};
+	});
+
 	it('priorityQueue', function(done) {
 		var responseArray = [];
 		var priorityQueue = pasync.priorityQueue(function(task) {
