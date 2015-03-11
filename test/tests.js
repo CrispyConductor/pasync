@@ -737,6 +737,7 @@ describe('pasync', function() {
 			expect(resultArray).to.deep.equal([4, 5, 4, 5, 4, 5]);
 			done();
 		}).catch(done);
+	});
 
 	it('queue', function(done) {
 		var responseQueue = [];
