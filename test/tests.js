@@ -1,3 +1,5 @@
+/*jshint -W030 */
+
 var expect = require('chai').expect;
 var pasync = require('../lib/index');
 var Promise = require('es6-promise').Promise;
@@ -762,7 +764,7 @@ describe('pasync', function() {
 		var queue = pasync.queue(function(task) {
 			return new Promise(function(resolve, reject) {
 				if(task === 4) {
-					reject(123);	
+					reject(123);
 				} else {
 					responseQueue.push(task * 2);
 					resolve();
