@@ -712,7 +712,6 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
-<<<<<<< HEAD
 	it('applyEachSeries', function(done) {
 		var resultArray = [];
 		function addStuff1(a, b) {
