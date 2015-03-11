@@ -712,6 +712,33 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('applyEachSeries', function(done) {
+		var resultArray = [];
+		function addStuff1(a, b) {
+			resultArray.push(a);
+			resultArray.push(b);
+			return Promise.resolve();
+		}
+		function addStuff2(a, b) {
+			resultArray.push(a);
+			resultArray.push(b);
+			return Promise.resolve();
+		}
+		function addStuff3(a, b) {
+			resultArray.push(a);
+			resultArray.push(b);
+			return Promise.resolve();
+		}
+		pasync.applyEachSeries([
+			addStuff1,
+			addStuff2,
+			addStuff3
+		], 4, 5).then(function() {
+			expect(resultArray).to.deep.equal([4, 5, 4, 5, 4, 5]);
+			done();
+		}).catch(done);
+	});
+
 	it('queue', function(done) {
 		var responseQueue = [];
 		var queue = pasync.queue(function(task) {
@@ -758,6 +785,25 @@ describe('pasync', function() {
 		};
 	});
 
+	it('priorityQueue', function(done) {
+		var responseQueue = [];
+		var priorityQueue = pasync.priorityQueue(function(task) {
+			return new Promise(function(resolve, reject) {
+				responseQueue.push(task * 2);
+				resolve();
+			});
+		}, 2);
+
+		priorityQueue.push(1, 3).catch(done);
+		priorityQueue.push([2, 3, 4, 5], 1).catch(done);
+
+		priorityQueue.drain = function() {
+			expect(responseQueue).to.deep.equal([4, 6, 8, 10, 2]);
+			done();
+		};
+	});
+
+	
 	it('cargo', function(done) {
 		var responseArray = [];
 		var cargo = pasync.cargo(function(tasks) {
