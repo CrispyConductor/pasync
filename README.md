@@ -64,3 +64,4 @@ have error handling, such as `async.filter` .
 * applyEach
 * applyEachSeries
 * queue
+* priorityQueue
