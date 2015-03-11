@@ -803,7 +803,7 @@ describe('pasync', function() {
 		};
 	});
 
-	
+
 	it('cargo', function(done) {
 		var responseArray = [];
 		var cargo = pasync.cargo(function(tasks) {
@@ -822,16 +822,21 @@ describe('pasync', function() {
 
 	it('cargo with error', function(done) {
 		var responseArray = [];
+		var isError = false;
 		var cargo = pasync.cargo(function(tasks) {
 			return new Promise(function(resolve, reject) {
 				tasks.forEach(function(task) {
 					if(task === 3) {
-						reject(123);
+						isError = true;
 					} else {
 						responseArray.push(task * 12);
-						resolve();
 					}
 				});
+				if(isError) {
+					reject(123)
+				} else {
+					resolve();
+				}
 			});
 		}, 2);
 
