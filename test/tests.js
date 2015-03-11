@@ -759,22 +759,20 @@ describe('pasync', function() {
 	});
 
 	it('priorityQueue', function(done) {
-		var responseArray = [];
+		var responseQueue = [];
 		var priorityQueue = pasync.priorityQueue(function(task) {
-			console.log('prority queue');
 			return new Promise(function(resolve, reject) {
-				responseArray.push(task * 2);
+				responseQueue.push(task * 2);
 				resolve();
 			});
 		}, 2);
 
-		priorityQueue.push(2, 5).catch(done);
+		priorityQueue.push(1, 3).catch(done);
 		priorityQueue.push([2, 3, 4, 5], 1).catch(done);
 
 		priorityQueue.drain = function() {
-			expect(responseArray).to.deep.equal([4, 6, 8, 10]);
+			expect(responseQueue).to.deep.equal([4, 6, 8, 10, 2]);
 			done();
 		};
 	});
-
 });
