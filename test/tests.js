@@ -822,9 +822,9 @@ describe('pasync', function() {
 
 	it('cargo with error', function(done) {
 		var responseArray = [];
-		var isError = false;
 		var cargo = pasync.cargo(function(tasks) {
 			return new Promise(function(resolve, reject) {
+				var isError = false;
 				tasks.forEach(function(task) {
 					if(task === 3) {
 						isError = true;
