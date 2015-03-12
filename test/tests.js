@@ -775,4 +775,31 @@ describe('pasync', function() {
 			done();
 		};
 	});
+
+	it('priorityQueue with error', function(done) {
+		var responseQueue = [];
+		var priorityQueue = pasync.priorityQueue(function(task) {
+			return new Promise(function(resolve, reject) {
+				if(task === 4) {
+					reject(123);	
+				} else {
+					responseQueue.push(task * 2);
+					resolve();
+				}
+			});
+		}, 2);
+
+		priorityQueue.push([2, 3]).catch(done);
+		priorityQueue.push(4).then(function() {
+			throw new Error('should not reach');
+		}, function(err) {
+			expect(err).to.equal(123);
+		}).catch(done);
+		priorityQueue.push(5).catch(done);
+
+		priorityQueue.drain = function() {
+			expect(responseQueue).to.deep.equal([4, 6, 10]);
+			done();
+		};
+	});
 });
