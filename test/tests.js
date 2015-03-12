@@ -805,6 +805,7 @@ describe('pasync', function() {
 		};
 	});
 
+
 	it('priorityQueue with error', function(done) {
 		var responseQueue = [];
 		var priorityQueue = pasync.priorityQueue(function(task) {
@@ -828,6 +829,55 @@ describe('pasync', function() {
 
 		priorityQueue.drain = function() {
 			expect(responseQueue).to.deep.equal([4, 6, 10]);
+			done();
+		};
+	});
+
+	it('cargo', function(done) {
+		var responseArray = [];
+		var cargo = pasync.cargo(function(tasks) {
+			tasks.forEach(function(task) {
+				responseArray.push(task * 12);
+			});
+			return Promise.resolve();
+		}, 5);
+
+		cargo.push([1, 2, 3, 4, 5]).catch(done);
+		cargo.drain = function() {
+			expect(responseArray).to.deep.equal([12, 24, 36, 48, 60]);
+			done();
+		};
+	});
+
+	it('cargo with error', function(done) {
+		var responseArray = [];
+		var cargo = pasync.cargo(function(tasks) {
+			return new Promise(function(resolve, reject) {
+				var isError = false;
+				tasks.forEach(function(task) {
+					if(task === 3) {
+						isError = true;
+					} else {
+						responseArray.push(task * 12);
+					}
+				});
+				if(isError) {
+					reject(123)
+				} else {
+					resolve();
+				}
+			});
+		}, 2);
+
+		cargo.push([1, 2, 4, 5]).catch(done);
+		cargo.push(3).then(function() {
+			throw new Error('should not reach');
+		}, function(err) {
+			expect(err).to.equal(123);
+		}).catch(done);
+
+		cargo.drain = function() {
+			expect(responseArray).to.deep.equal([12, 24, 48, 60]);
 			done();
 		};
 	});
