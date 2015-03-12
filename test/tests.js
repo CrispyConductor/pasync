@@ -1,3 +1,5 @@
+/*jshint -W030 */
+
 var expect = require('chai').expect;
 var pasync = require('../lib/index');
 var Promise = require('es6-promise').Promise;
@@ -712,6 +714,33 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('applyEachSeries', function(done) {
+		var resultArray = [];
+		function addStuff1(a, b) {
+			resultArray.push(a);
+			resultArray.push(b);
+			return Promise.resolve();
+		}
+		function addStuff2(a, b) {
+			resultArray.push(a);
+			resultArray.push(b);
+			return Promise.resolve();
+		}
+		function addStuff3(a, b) {
+			resultArray.push(a);
+			resultArray.push(b);
+			return Promise.resolve();
+		}
+		pasync.applyEachSeries([
+			addStuff1,
+			addStuff2,
+			addStuff3
+		], 4, 5).then(function() {
+			expect(resultArray).to.deep.equal([4, 5, 4, 5, 4, 5]);
+			done();
+		}).catch(done);
+	});
+
 	it('queue', function(done) {
 		var responseQueue = [];
 		var queue = pasync.queue(function(task) {
@@ -735,7 +764,7 @@ describe('pasync', function() {
 		var queue = pasync.queue(function(task) {
 			return new Promise(function(resolve, reject) {
 				if(task === 4) {
-					reject(123);	
+					reject(123);
 				} else {
 					responseQueue.push(task * 2);
 					resolve();

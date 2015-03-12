@@ -25,6 +25,7 @@ have error handling, such as `async.filter` .
 
 ## Implemented Functions
 
+### Collections
 * each
 * eachSeries
 * eachLimit
@@ -57,9 +58,10 @@ have error handling, such as `async.filter` .
 * until
 * doUntil
 * forever
-* waterfall
+* waterfall 
 * compose
 * seq
 * applyEach
+* applyEachSeries
 * queue
 * priorityQueue
