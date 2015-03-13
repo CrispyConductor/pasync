@@ -881,4 +881,26 @@ describe('pasync', function() {
 			done();
 		};
 	});
+
+	it('auto', function(done) {
+		var auto = pasync.auto({
+			get_data: function() {
+				return Promise.resolve([1, 2, 3]);
+			},
+			da_data: ['get_data', function(cb, results) {
+				return Promise.resolve();
+			}],
+			get_more_data: ['get_data', function() {
+				return Promise.resolve([4, 5]);
+			}],
+			so_much_data: ['get_data', 'get_more_data', function(cb) {
+				console.log('oh hai');
+				cb();
+			}]
+		});//.then(function() {
+		//	expect(auto.get_data).to.deep.equal([1, 2, 3]);
+		//	expect(auto.get_more_data).to.deep.equal([4, 5]);
+		//	done();
+		//});
+	});
 });
