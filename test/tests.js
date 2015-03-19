@@ -949,4 +949,31 @@ describe('pasync', function() {
 			done();
 		}).catch(done);
 	});
+
+	it('retry', function(done) {
+		var responseArray = [];
+		var retry = pasync.retry(3, function() {
+			responseArray.push('a');
+			responseArray.push('b');
+			responseArray.push('c');
+			return Promise.resolve();
+		}).then(function() {
+			expect(responseArray).to.deep.equal(['a', 'b', 'c']);
+			done();
+		}).catch(done);
+	});
+
+	it('retry with error', function(done) {
+		var retryCount = 0;
+		var retry = pasync.retry(3, function() {
+			retryCount++;
+			return Promise.reject(123);
+		}).then(function() {
+			throw new Error('should not reach');
+		}, function(err) {
+			expect(err).to.equal(123);
+			expect(retryCount).to.equal(3);
+			done();
+		}).catch(done);
+	});
 });
