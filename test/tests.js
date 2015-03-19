@@ -960,18 +960,19 @@ describe('pasync', function() {
 		}).then(function() {
 			expect(responseArray).to.deep.equal(['a', 'b', 'c']);
 			done();
-		}, function(err) {
-			throw(err)
 		}).catch(done);
 	});
 
 	it('retry with error', function(done) {
+		var retryCount = 0;
 		var retry = pasync.retry(3, function() {
+			retryCount++;
 			return Promise.reject(123);
 		}).then(function() {
 			throw new Error('should not reach');
 		}, function(err) {
 			expect(err).to.equal(123);
+			expect(retryCount).to.equal(3);
 			done();
 		}).catch(done);
 	});
