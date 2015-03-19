@@ -883,24 +883,25 @@ describe('pasync', function() {
 	});
 
 	it('auto', function(done) {
+		var responseArray = [];
 		var auto = pasync.auto({
 			get_data: function() {
-				return Promise.resolve([1, 2, 3]);
+				responseArray.push(2);
+				return Promise.resolve(2);
 			},
-			da_data: ['get_data', function(cb, results) {
-				return Promise.resolve();
+			da_data: ['get_data', function(results) {
+				var tempResult = results.get_data * 2;
+				responseArray.push(tempResult);
+				return Promise.resolve(tempResult);
 			}],
-			get_more_data: ['get_data', function() {
-				return Promise.resolve([4, 5]);
-			}],
-			so_much_data: ['get_data', 'get_more_data', function(cb) {
-				console.log('oh hai');
-				cb();
+			get_more_data: ['get_data', 'da_data', function(results) {
+				var tempResult = results.da_data * 2;
+				responseArray.push(tempResult);
+				return Promise.resolve(tempResult);
 			}]
-		});//.then(function() {
-		//	expect(auto.get_data).to.deep.equal([1, 2, 3]);
-		//	expect(auto.get_more_data).to.deep.equal([4, 5]);
-		//	done();
-		//});
+		}).then(function(resultObject) {
+			expect(responseArray).to.deep.equal([2, 4, 8]);
+			done();
+		});
 	});
 });
