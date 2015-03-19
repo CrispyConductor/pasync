@@ -874,11 +874,79 @@ describe('pasync', function() {
 			throw new Error('should not reach');
 		}, function(err) {
 			expect(err).to.equal(123);
-		}).catch(done);
-
-		cargo.drain = function() {
-			expect(responseArray).to.deep.equal([12, 24, 48, 60]);
 			done();
-		};
+		}).catch(done);
+	});
+
+	it('auto', function(done) {
+		var responseArray = [];
+		var auto = pasync.auto({
+			get_data: function() {
+				responseArray.push(2);
+				return Promise.resolve(2);
+			},
+			da_data: ['get_data', function(results) {
+				var tempResult = results.get_data * 2;
+				responseArray.push(tempResult);
+				return Promise.resolve(tempResult);
+			}],
+			get_more_data: ['get_data', 'da_data', function(results) {
+				var tempResult = results.da_data * 2;
+				responseArray.push(tempResult);
+				return Promise.resolve(tempResult);
+			}]
+		}).then(function(resultObject) {
+			expect(responseArray).to.deep.equal([2, 4, 8]);
+			done();
+		}).catch(done);
+	});
+
+	it('auto with value', function(done) {
+		var responseArray = [];
+		var auto = pasync.auto({
+			get_data: function() {
+				responseArray.push(2);
+				return 2;
+			},
+			da_data: ['get_data', function(results) {
+				var tempResult = results.get_data * 2;
+				responseArray.push(tempResult);
+				return Promise.resolve(tempResult);
+			}],
+			get_more_data: ['get_data', 'da_data', function(results) {
+				var tempResult = results.da_data * 2;
+				responseArray.push(tempResult);
+				return Promise.resolve(tempResult);
+			}]
+		}).then(function(resultObject) {
+			expect(responseArray).to.deep.equal([2, 4, 8]);
+			done();
+		}).catch(done);
+	});
+
+	it('auto with error', function(done) {
+		var auto = pasync.auto({
+			fail_me: function() {
+				return Promise.reject(123);
+			}
+		}).then(function() {
+			throw new Error('should not reach');
+		}, function(err) {
+			expect(err).to.equal(123);
+			done();
+		}).catch(done);
+	});
+
+	it('auto with throwing error', function(done) {
+		var auto = pasync.auto({
+			fail_me: function() {
+				throw(123);
+			}
+		}).then(function() {
+			throw new Error('should not reach');
+		}, function(err) {
+			expect(err).to.equal(123);
+			done();
+		}).catch(done);
 	});
 });

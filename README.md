@@ -66,3 +66,4 @@ have error handling, such as `async.filter` .
 * queue
 * priorityQueue
 * cargo
+* auto
