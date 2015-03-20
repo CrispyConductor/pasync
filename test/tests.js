@@ -977,16 +977,14 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
-	it('times', function(done) {
-		var timesCount = 0;
-		var timesTest = 2;
-		var times = pasync.times(8, function(n, next) {
-			timesCount++;
-			timesTest = timesTest * 2;
-			return Promise.resolve();
+	it('nextTick', function(done) {
+		var resultArray = [];
+		new Promise(function(resolve) {
+			pasync.nextTick(resolve);
+			resultArray.push(1);
 		}).then(function() {
-			expect(timesCount).to.equal(8);
-			expect(timesTest).to.equal(512);
+			resultArray.push(2);
+			expect(resultArray).to.deep.equal([1, 2]);
 			done();
 		}).catch(done);
 	});
@@ -1001,6 +999,27 @@ describe('pasync', function() {
 		}, function(err) {
 			expect(timesCount).to.equal(8);
 			expect(err).to.equal(123);
+	it('nextTick chaining', function(done) {
+		var resultArray = [];
+		resultArray.push(1);
+		Promise.resolve().then(function() {
+			resultArray.push(2);
+		}).then(pasync.nextTick).then(function() {
+			expect(resultArray).to.deep.equal([1, 2]);
+			done();
+		}).catch(done);
+	});
+
+	it('times', function(done) {
+		var timesCount = 0;
+		var timesTest = 2;
+		var times = pasync.times(8, function(n, next) {
+			timesCount++;
+			timesTest = timesTest * 2;
+			return Promise.resolve();
+		}).then(function() {
+			expect(timesCount).to.equal(8);
+			expect(timesTest).to.equal(512);
 			done();
 		}).catch(done);
 	});
