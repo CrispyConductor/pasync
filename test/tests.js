@@ -991,7 +991,8 @@ describe('pasync', function() {
 
 	it('nextTick chaining', function(done) {
 		var resultArray = [];
-		Promise.resolve(resultArray.push(1)).then(function() {
+		resultArray.push(1);
+		Promise.resolve().then(function() {
 			resultArray.push(2);
 		}).then(pasync.nextTick).then(function() {
 			expect(resultArray).to.deep.equal([1, 2]);
