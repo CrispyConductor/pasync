@@ -976,4 +976,32 @@ describe('pasync', function() {
 			done();
 		}).catch(done);
 	});
+
+	it('times', function(done) {
+		var timesCount = 0;
+		var timesTest = 2;
+		var times = pasync.times(8, function(n, next) {
+			timesCount++;
+			timesTest = timesTest * 2;
+			return Promise.resolve();
+		}).then(function() {
+			expect(timesCount).to.equal(8);
+			expect(timesTest).to.equal(512);
+			done();
+		}).catch(done);
+	});
+
+	it('times with error', function(done) {
+		var timesCount = 0;
+		var times = pasync.times(8, function(n, next) {
+			timesCount++;
+			return Promise.reject(123);
+		}).then(function() {
+			throw new Error('should not reach');
+		}, function(err) {
+			expect(timesCount).to.equal(8);
+			expect(err).to.equal(123);
+			done();
+		}).catch(done);
+	});
 });

@@ -68,3 +68,4 @@ have error handling, such as `async.filter` .
 * cargo
 * auto
 * retry
+* times
