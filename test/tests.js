@@ -989,16 +989,6 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
-	it('times with error', function(done) {
-		var timesCount = 0;
-		var times = pasync.times(8, function(n, next) {
-			timesCount++;
-			return Promise.reject(123);
-		}).then(function() {
-			throw new Error('should not reach');
-		}, function(err) {
-			expect(timesCount).to.equal(8);
-			expect(err).to.equal(123);
 	it('nextTick chaining', function(done) {
 		var resultArray = [];
 		resultArray.push(1);
@@ -1020,6 +1010,21 @@ describe('pasync', function() {
 		}).then(function() {
 			expect(timesCount).to.equal(8);
 			expect(timesTest).to.equal(512);
+			done();
+		}).catch(done);
+	});
+
+
+	it('times with error', function(done) {
+		var timesCount = 0;
+		var times = pasync.times(8, function(n, next) {
+			timesCount++;
+			return Promise.reject(123);
+		}).then(function() {
+			throw new Error('should not reach');
+		}, function(err) {
+			expect(timesCount).to.equal(8);
+			expect(err).to.equal(123);
 			done();
 		}).catch(done);
 	});
