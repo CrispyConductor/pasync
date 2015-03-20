@@ -979,15 +979,23 @@ describe('pasync', function() {
 
 	it('nextTick', function(done) {
 		var resultArray = [];
-		var funcs = [function() {
-			var nextTick = pasync.nextTick(function() {
-				resultArray.push(2);
-			});
+		new Promise(function(resolve) {
+			pasync.nextTick(resolve);
 			resultArray.push(1);
-		}, function() {
+		}).then(function() {
+			resultArray.push(2);
 			expect(resultArray).to.deep.equal([1, 2]);
 			done();
-		}];
-	pasync.series(funcs);
+		}).catch(done);
+	});
+
+	it('nextTick chaining', function(done) {
+		var resultArray = [];
+		Promise.resolve(resultArray.push(1)).then(function() {
+			resultArray.push(2);
+		}).then(pasync.nextTick).then(function() {
+			expect(resultArray).to.deep.equal([1, 2]);
+			done();
+		}).catch(done);
 	});
 });
