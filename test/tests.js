@@ -976,4 +976,18 @@ describe('pasync', function() {
 			done();
 		}).catch(done);
 	});
+
+	it('nextTick', function(done) {
+		var resultArray = [];
+		var funcs = [function() {
+			var nextTick = pasync.nextTick(function() {
+				resultArray.push(2);
+			});
+			resultArray.push(1);
+		}, function() {
+			expect(resultArray).to.deep.equal([1, 2]);
+			done();
+		}];
+	pasync.series(funcs);
+	});
 });
