@@ -1017,7 +1017,7 @@ describe('pasync', function() {
 
 	it('times with error', function(done) {
 		var timesCount = 0;
-		var times = pasync.times(8, function(n, next) {
+		pasync.times(8, function(n, next) {
 			timesCount++;
 			return Promise.reject(123);
 		}).then(function() {
