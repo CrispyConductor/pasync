@@ -976,4 +976,27 @@ describe('pasync', function() {
 			done();
 		}).catch(done);
 	});
+
+	it('nextTick', function(done) {
+		var resultArray = [];
+		new Promise(function(resolve) {
+			pasync.nextTick(resolve);
+			resultArray.push(1);
+		}).then(function() {
+			resultArray.push(2);
+			expect(resultArray).to.deep.equal([1, 2]);
+			done();
+		}).catch(done);
+	});
+
+	it('nextTick chaining', function(done) {
+		var resultArray = [];
+		resultArray.push(1);
+		Promise.resolve().then(function() {
+			resultArray.push(2);
+		}).then(pasync.nextTick).then(function() {
+			expect(resultArray).to.deep.equal([1, 2]);
+			done();
+		}).catch(done);
+	});
 });
