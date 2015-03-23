@@ -1003,7 +1003,7 @@ describe('pasync', function() {
 	it('times', function(done) {
 		var timesCount = 0;
 		var timesTest = 2;
-		var times = pasync.times(8, function(n, next) {
+		pasync.times(8, function(n, next) {
 			timesCount++;
 			timesTest = timesTest * 2;
 			return Promise.resolve();
