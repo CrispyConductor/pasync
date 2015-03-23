@@ -1028,4 +1028,316 @@ describe('pasync', function() {
 			done();
 		}).catch(done);
 	});
+
+	describe('Neo-Async Improvement of Convenience Support', function() {
+		var testObject = {
+			notRed: 'red',
+			notGreen: 'green',
+			notBlue: 'blue'
+		};
+
+		var numTestObject = {
+			one: 1,
+			two: 2,
+			three: 3
+		};
+
+		it('each with object', function(done) {
+			var res = [];
+			pasync.each(testObject, function(el) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						res.push(el);
+						resolve();
+					});
+				});
+			}).then(function() {
+				expect(res).to.contain('red');
+				expect(res).to.contain('blue');
+				expect(res).to.contain('green');
+				expect(res).to.have.length(3);
+				done();
+			}).catch(done);
+		});
+
+		it('each with values', function(done) {
+			var res = [];
+			pasync.each(numTestObject, function(el) {
+				res.push(el);
+			}).then(function() {
+				expect(res).to.contain(1);
+				expect(res).to.contain(2);
+				expect(res).to.contain(3);
+				expect(res).to.have.length(3);
+				done();
+			}).catch(done);
+		});
+
+		it('eachSeries', function(done) {
+			var res = [];
+			pasync.eachSeries(testObject, function(el) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						res.push(el);
+						resolve();
+					});
+				});
+			}).then(function() {
+					expect(res).to.contain('red');
+					expect(res).to.contain('blue');
+					expect(res).to.contain('green');
+					expect(res).to.have.length(3);
+				done();
+			}).catch(done);
+		});
+
+		it('eachLimit', function(done) {
+			var res = [];
+			pasync.eachLimit(testObject, 2, function(el) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						res.push(el);
+						resolve();
+					});
+				});
+			}).then(function() {
+						expect(res).to.contain('red');
+						expect(res).to.contain('blue');
+						expect(res).to.contain('green');
+				expect(res).to.have.length(3);
+				done();
+			}).catch(done);
+		});
+
+		it('map with promises', function(done) {
+			pasync.map(numTestObject, function(el) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(el + 1);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([ 2, 3, 4 ]);
+				done();
+			}).catch(done);
+		});
+
+		it('map with values', function(done) {
+			pasync.map(numTestObject, function(el) {
+				return el + 1;
+			}).then(function(res) {
+				expect(res).to.deep.equal([2, 3, 4]);
+				done();
+			}).catch(done);
+		});
+
+		it('mapSeries', function(done) {
+			pasync.mapSeries(numTestObject, function(el) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(el + 1);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([2, 3, 4]);
+				done();
+			}).catch(done);
+		});
+
+		it('mapLimit', function(done) {
+			pasync.mapLimit(numTestObject, 2, function(el) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(el + 1);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([2, 3, 4]);
+				done();
+			}).catch(done);
+		});
+
+		it('filter', function(done) {
+			pasync.filter(numTestObject, function(el) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(el > 1);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([2, 3]);
+				done();
+			}).catch(done);
+		});
+
+		it('filterSeries', function(done) {
+			pasync.filterSeries(numTestObject, function(el) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(el > 1);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([2, 3]);
+				done();
+			}).catch(done);
+		});
+
+		it('reject', function(done) {
+			pasync.reject(numTestObject, function(el) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(el > 1);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([1]);
+				done();
+			}).catch(done);
+		});
+
+
+		it('rejectSeries', function(done) {
+			pasync.rejectSeries(numTestObject, function(el) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(el > 1);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([1]);
+				done();
+			}).catch(done);
+		});
+
+		it('reduce', function(done) {
+			pasync.reduce(numTestObject, 0, function(memo, item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(memo + item);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.equal(6);
+				done();
+			}).catch(done);
+		});
+
+		it('reduceRight', function(done) {
+			pasync.reduceRight(numTestObject, 0, function(memo, item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(memo + item);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.equal(6);
+				done();
+			}).catch(done);
+		});
+
+		it('detect', function(done) {
+			pasync.detect(numTestObject, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item === 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.equal(2);
+				done();
+			}).catch(done);
+		});
+
+		it('detectSeries', function(done) {
+			pasync.detectSeries(numTestObject, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item === 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.equal(2);
+				done();
+			}).catch(done);
+		});
+
+		it('sortBy', function(done) {
+			var unorderedNumTestObject = {
+				one: 2,
+				two: 3,
+				three: 1
+			};
+			pasync.sortBy(unorderedNumTestObject, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([1, 2, 3]);
+				done();
+			}).catch(done);
+		});
+
+		it('some', function(done) {
+			pasync.some(numTestObject, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item === 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.equal(true);
+				done();
+			}).catch(done);
+		});
+
+		it('every', function(done) {
+			pasync.every(numTestObject, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item === 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.equal(false);
+				done();
+			}).catch(done);
+		});
+
+		it('concat', function(done) {
+			var specialNumTestObject = {
+				one: [1, 2],
+				four: [3, 4]
+			};
+			pasync.concat(specialNumTestObject, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([1, 2, 3, 4]);
+				done();
+			}).catch(done);
+		});
+
+		it('concatSeries', function(done) {
+			var specialNumTestObject = {
+				one: [1, 2],
+				four: [3, 4]
+			};
+			pasync.concatSeries(specialNumTestObject, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([1, 2, 3, 4]);
+				done();
+			}).catch(done);
+		});
+	});
 });
