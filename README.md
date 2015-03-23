@@ -70,3 +70,4 @@ have error handling, such as `async.filter` .
 * retry
 * nextTick
 * times
+* timesSeries
