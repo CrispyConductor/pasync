@@ -69,3 +69,4 @@ have error handling, such as `async.filter` .
 * auto
 * retry
 * nextTick
+* times
