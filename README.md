@@ -71,8 +71,8 @@ have error handling, such as `async.filter` .
 * times
 * timesSeries
 
-
 ## Functions not implemented
+
 * iterator
 * apply
 * memoize

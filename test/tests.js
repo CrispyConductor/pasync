@@ -1027,7 +1027,7 @@ describe('pasync', function() {
 			done();
 		}).catch(done);
 	});
-	
+
 	it('timesSeries', function(done) {
 		var timesCount = 0;
 		var timesTest = 2;
