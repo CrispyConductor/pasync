@@ -25,7 +25,6 @@ have error handling, such as `async.filter` .
 
 ## Implemented Functions
 
-### Collections
 * each
 * eachSeries
 * eachLimit
@@ -70,3 +69,13 @@ have error handling, such as `async.filter` .
 * retry
 * nextTick
 * times
+
+
+## Functions not implemented
+* iterator
+* apply
+* memoize
+* unmemoize
+* log
+* dir
+* noConflict
