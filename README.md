@@ -69,6 +69,7 @@ have error handling, such as `async.filter` .
 * retry
 * nextTick
 * times
+<<<<<<< HEAD
 
 
 ## Functions not implemented
@@ -79,3 +80,6 @@ have error handling, such as `async.filter` .
 * log
 * dir
 * noConflict
+=======
+* timesSeries
+>>>>>>> 3a72ef1344c06110da91204011cf9fb671527e2e

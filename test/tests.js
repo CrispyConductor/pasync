@@ -1014,7 +1014,6 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
-
 	it('times with error', function(done) {
 		var timesCount = 0;
 		pasync.times(8, function(n, next) {
@@ -1024,6 +1023,31 @@ describe('pasync', function() {
 			throw new Error('should not reach');
 		}, function(err) {
 			expect(timesCount).to.equal(8);
+			expect(err).to.equal(123);
+			done();
+		}).catch(done);
+	});
+	
+	it('timesSeries', function(done) {
+		var timesCount = 0;
+		var timesTest = 2;
+		pasync.timesSeries(17, function(n, next) {
+			timesCount++;
+			timesTest = timesTest * 2;
+			return Promise.resolve();
+		}).then(function() {
+			expect(timesCount).to.equal(17);
+			expect(timesTest).to.equal(262144);
+			done();
+		}).catch(done);
+	});
+
+	it('timesSeries with error', function(done) {
+		pasync.timesSeries(8, function(n, next) {
+			return Promise.reject(123);
+		}).then(function() {
+			throw new Error('should not reach');
+		}, function(err) {
 			expect(err).to.equal(123);
 			done();
 		}).catch(done);
