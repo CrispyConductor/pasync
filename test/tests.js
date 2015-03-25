@@ -1373,10 +1373,10 @@ describe('pasync', function() {
 				return el + 1;
 			}).then(function(res) {
 				expect(res).to.deep.equal({
-				0: 2,
-				1: 3,
-				2: 4
-			});
+					0: 2,
+					1: 3,
+					2: 4
+				});
 				done();
 			}).catch(done);
 		});
@@ -1391,10 +1391,10 @@ describe('pasync', function() {
 				return el + 1;
 			}).then(function(res) {
 				expect(res).to.deep.equal({
-				hello: 2,
-				goodbye: 3,
-				dough: 4
-			});
+					hello: 2,
+					goodbye: 3,
+					dough: 4
+				});
 				done();
 			}).catch(done);
 		});
@@ -1405,10 +1405,10 @@ describe('pasync', function() {
 				return el + 1;
 			}).then(function(res) {
 				expect(res).to.deep.equal({
-				0: 2,
-				1: 3,
-				2: 4
-			});
+					0: 2,
+					1: 3,
+					2: 4
+				});
 				done();
 			}).catch(done);
 		});
@@ -1422,11 +1422,11 @@ describe('pasync', function() {
 			pasync.mapValuesSeries(arr, function(el) {
 				return el + 1;
 			}).then(function(res) {
-				expect(res).to.deep.equal({
-				hello: 2,
-				goodbye: 3,
-				dough: 4
-			});
+					expect(res).to.deep.equal({
+					hello: 2,
+					goodbye: 3,
+					dough: 4
+				});
 				done();
 			}).catch(done);
 		});
