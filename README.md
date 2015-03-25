@@ -84,3 +84,5 @@ have error handling, such as `async.filter` .
 * log
 * dir
 * noConflict
+
+* mapValuesSeries
