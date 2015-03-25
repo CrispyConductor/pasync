@@ -1422,7 +1422,7 @@ describe('pasync', function() {
 			pasync.mapValuesSeries(arr, function(el) {
 				return el + 1;
 			}).then(function(res) {
-					expect(res).to.deep.equal({
+				expect(res).to.deep.equal({
 					hello: 2,
 					goodbye: 3,
 					dough: 4
