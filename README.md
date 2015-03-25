@@ -74,6 +74,7 @@ have error handling, such as `async.filter` .
 ## Neo-Async Functions Implemented
 
 * mapValues
+* mapValuesSeries
 
 ## Functions not implemented
 
@@ -84,5 +85,3 @@ have error handling, such as `async.filter` .
 * log
 * dir
 * noConflict
-
-* mapValuesSeries
