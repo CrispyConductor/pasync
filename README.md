@@ -71,6 +71,8 @@ have error handling, such as `async.filter` .
 * times
 * timesSeries
 
+## Neo-Async Functions Implemented
+
 ## Functions not implemented
 
 * iterator

@@ -1364,4 +1364,21 @@ describe('pasync', function() {
 			}).catch(done);
 		});
 	});
+
+	describe('Neo-Async features not in Async', function() {
+		var count = 0;
+		it('concatLimit', function(done) {
+			var arr = [[1, 2], [9, 6], [5, 6]];
+			pasync.concatLimit(arr, 17, function(item) {
+				return new Promise(function(resolve) {
+					console.log('item: ' + item);
+					resolve(item);
+				});
+			}).then(function(res) {
+				console.log('res: ' + res);
+				expect(res).to.deep.equal([1, 2, 3, 4]);
+				done();
+			}).catch(done);
+		});
+	});
 });
