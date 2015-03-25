@@ -1363,5 +1363,19 @@ describe('pasync', function() {
 				done();
 			}).catch(done);
 		});
+
+		it('everySeries', function(done) {
+			var arr = [1, 2, 3];
+			pasync.every(arr, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item === 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.equal(false);
+				done();
+			}).catch(done);
+		})
 	});
 });
