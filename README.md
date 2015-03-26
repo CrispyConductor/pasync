@@ -76,6 +76,7 @@ have error handling, such as `async.filter` .
 
 * mapValues
 * mapValuesSeries
+* someSeries
 
 ## Functions not implemented
 
