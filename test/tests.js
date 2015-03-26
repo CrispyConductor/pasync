@@ -811,7 +811,7 @@ describe('pasync', function() {
 		var priorityQueue = pasync.priorityQueue(function(task) {
 			return new Promise(function(resolve, reject) {
 				if(task === 4) {
-					reject(123);	
+					reject(123);
 				} else {
 					responseQueue.push(task * 2);
 					resolve();
@@ -1366,7 +1366,7 @@ describe('pasync', function() {
 	});
 
 	describe('Neo-Async features', function() {
-		
+
 		it('mapValues as array', function(done) {
 			var arr = [1, 2, 3];
 			pasync.mapValues(arr, function(el) {
@@ -1380,7 +1380,7 @@ describe('pasync', function() {
 				done();
 			}).catch(done);
 		});
-	
+
 		it('mapValues as object', function(done) {
 			var arr = {
 				hello: 1,
@@ -1398,7 +1398,7 @@ describe('pasync', function() {
 				done();
 			}).catch(done);
 		});
-		
+
 		it('mapValuesSeries as array', function(done) {
 			var arr = [1, 2, 3];
 			pasync.mapValuesSeries(arr, function(el) {
@@ -1412,7 +1412,7 @@ describe('pasync', function() {
 				done();
 			}).catch(done);
 		});
-	
+
 		it('mapValuesSeries as object', function(done) {
 			var arr = {
 				hello: 1,
@@ -1429,6 +1429,30 @@ describe('pasync', function() {
 				});
 				done();
 			}).catch(done);
+		});
+
+		it('abort', function(done) {
+			// fudge around with uncaught exception listeners ...
+			var oldListeners = process.listeners('uncaughtException').slice(0);
+			oldListeners.forEach(function(listener) {
+				process.removeListener('uncaughtException', listener);
+			});
+			var newListener = function(exception) {
+				process.removeListener('uncaughtException', newListener);
+				oldListeners.forEach(function(listener) {
+					process.on('uncaughtException', listener);
+				});
+				expect(exception).to.equal(123);
+				done();
+			};
+			process.on('uncaughtException', newListener);
+
+			// Do test
+			new Promise(function(resolve) {
+				setTimeout(resolve, 5);
+			}).then(function() {
+				throw 123;
+			}).catch(pasync.abort);
 		});
 	});
 });

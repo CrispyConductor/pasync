@@ -1,6 +1,7 @@
 # pasync
 
-Version of async that uses promises instead of callbacks.
+Version of async that uses promises instead of callbacks.  Also includes other asynchronous
+promise utilities.
 
 ```js
 var pasync = require('pasync');
@@ -57,7 +58,7 @@ have error handling, such as `async.filter` .
 * until
 * doUntil
 * forever
-* waterfall 
+* waterfall
 * compose
 * seq
 * applyEach
@@ -85,3 +86,22 @@ have error handling, such as `async.filter` .
 * log
 * dir
 * noConflict
+
+## Other Utilities
+
+### abort(err)
+
+This is intended to be used as a last-ditch error handler for promises.  Using
+promises, if the last rejection handler in a promise throws an exception, it is
+silently ignored.  Calling `abort(err)` will throw `err` as an exception in the
+global scope, calling the process's `uncaughtException` listeners or exiting with
+the exception by default.  Use it like this:
+
+```js
+getUser(nonexistent_id).then(function(user) {
+	// do something with user
+}).catch(function(err) {
+	// Note the (obvious) errors in the rejection handlers; by default, this will be silently ignored
+	cunsil.lug(err);
+}).catch(pasync.abort);	// This will catch the undefined variable error and throw it globally
+```
