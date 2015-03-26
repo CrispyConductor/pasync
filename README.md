@@ -77,6 +77,8 @@ have error handling, such as `async.filter` .
 * mapValues
 * mapValuesSeries
 
+* sortBySeries
+
 ## Functions not implemented
 
 * iterator

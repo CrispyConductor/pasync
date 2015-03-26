@@ -1431,6 +1431,20 @@ describe('pasync', function() {
 			}).catch(done);
 		});
 
+		it('sortBySeries', function(done) {
+			var arr = [3, 5, 2, 1, 4];
+			pasync.sortBy(arr, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([1, 2, 3, 4, 5]);
+				done();
+			}).catch(done);
+		});
+
 		it('abort', function(done) {
 			// fudge around with uncaught exception listeners ...
 			var oldListeners = process.listeners('uncaughtException').slice(0);
