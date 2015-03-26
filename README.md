@@ -74,13 +74,11 @@ have error handling, such as `async.filter` .
 
 ## Neo-Async Functions Implemented
 
-<<<<<<< HEAD
-=======
+* concatLimit
 * mapValues
 * mapValuesSeries
 * someSeries
 
->>>>>>> master
 ## Functions not implemented
 
 * iterator

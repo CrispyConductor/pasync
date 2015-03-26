@@ -1368,14 +1368,14 @@ describe('pasync', function() {
 	describe('Neo-Async features', function() {
 
 		it('concatLimit', function(done) {
-			var arr = [[1, 2], [9, 6], [5, 6]];
+			var arr = [[1, 2], [3, 4]];
 			pasync.concatLimit(arr, 17, function(item) {
 				return new Promise(function(resolve) {
-					console.log('item: ' + item);
-					resolve(item);
+					setImmediate(function() {
+						resolve(item);
+					});
 				});
 			}).then(function(res) {
-				console.log('res: ' + res);
 				expect(res).to.deep.equal([1, 2, 3, 4]);
 				done();
 			}).catch(done);
