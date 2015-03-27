@@ -74,6 +74,7 @@ have error handling, such as `async.filter` .
 
 ## Neo-Async Functions Implemented
 
+* concatLimit
 * mapValues
 * mapValuesSeries
 * detectLimit

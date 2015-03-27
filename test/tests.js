@@ -1367,6 +1367,20 @@ describe('pasync', function() {
 
 	describe('Neo-Async features', function() {
 
+		it('concatLimit', function(done) {
+			var arr = [[1, 2], [3, 4]];
+			pasync.concatLimit(arr, 17, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([1, 2, 3, 4]);
+				done();
+			}).catch(done);
+		});
+
 		it('mapValues as array', function(done) {
 			var arr = [1, 2, 3];
 			pasync.mapValues(arr, function(el) {
