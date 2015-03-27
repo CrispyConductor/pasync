@@ -1447,7 +1447,7 @@ describe('pasync', function() {
 
 		it('someSeries', function(done) {
 			var arr = [1, 2, 3];
-			pasync.some(arr, function(item) {
+			pasync.someSeries(arr, function(item) {
 				return new Promise(function(resolve) {
 					setImmediate(function() {
 						resolve(item === 2);
