@@ -811,7 +811,7 @@ describe('pasync', function() {
 		var priorityQueue = pasync.priorityQueue(function(task) {
 			return new Promise(function(resolve, reject) {
 				if(task === 4) {
-					reject(123);	
+					reject(123);
 				} else {
 					responseQueue.push(task * 2);
 					resolve();
@@ -1363,19 +1363,141 @@ describe('pasync', function() {
 				done();
 			}).catch(done);
 		});
+	});
 
-		it('everySeries', function(done) {
+	describe('Neo-Async features', function() {
+
+		it('concatLimit', function(done) {
+			var arr = [[1, 2], [3, 4]];
+			pasync.concatLimit(arr, 17, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([1, 2, 3, 4]);
+				done();
+			}).catch(done);
+		});
+
+		it('mapValues as array', function(done) {
 			var arr = [1, 2, 3];
-			pasync.every(arr, function(item) {
+			pasync.mapValues(arr, function(el) {
+				return el + 1;
+			}).then(function(res) {
+				expect(res).to.deep.equal({
+					0: 2,
+					1: 3,
+					2: 4
+				});
+				done();
+			}).catch(done);
+		});
+
+		it('mapValues as object', function(done) {
+			var arr = {
+				hello: 1,
+				goodbye: 2,
+				dough: 3
+			};
+			pasync.mapValues(arr, function(el) {
+				return el + 1;
+			}).then(function(res) {
+				expect(res).to.deep.equal({
+					hello: 2,
+					goodbye: 3,
+					dough: 4
+				});
+				done();
+			}).catch(done);
+		});
+
+		it('mapValuesSeries as array', function(done) {
+			var arr = [1, 2, 3];
+			pasync.mapValuesSeries(arr, function(el) {
+				return el + 1;
+			}).then(function(res) {
+				expect(res).to.deep.equal({
+					0: 2,
+					1: 3,
+					2: 4
+				});
+				done();
+			}).catch(done);
+		});
+
+		it('mapValuesSeries as object', function(done) {
+			var arr = {
+				hello: 1,
+				goodbye: 2,
+				dough: 3
+			};
+			pasync.mapValuesSeries(arr, function(el) {
+				return el + 1;
+			}).then(function(res) {
+				expect(res).to.deep.equal({
+					hello: 2,
+					goodbye: 3,
+					dough: 4
+				});
+				done();
+			}).catch(done);
+		});
+		
+		it('someSeries', function(done) {
+			var arr = [1, 2, 3];
+			pasync.some(arr, function(item) {
 				return new Promise(function(resolve) {
 					setImmediate(function() {
 						resolve(item === 2);
 					});
 				});
 			}).then(function(res) {
-				expect(res).to.equal(false);
+				expect(res).to.equal(true);
 				done();
 			}).catch(done);
-		})
+		});
+
+		it('sortBySeries', function(done) {
+			var arr = [3, 5, 2, 1, 4];
+			pasync.sortBy(arr, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([1, 2, 3, 4, 5]);
+				done();
+			}).catch(done);
+		});
+	});
+
+	describe('Utilities', function() {
+
+		it('abort', function(done) {
+			// fudge around with uncaught exception listeners ...
+			var oldListeners = process.listeners('uncaughtException').slice(0);
+			oldListeners.forEach(function(listener) {
+				process.removeListener('uncaughtException', listener);
+			});
+			var newListener = function(exception) {
+				process.removeListener('uncaughtException', newListener);
+				oldListeners.forEach(function(listener) {
+					process.on('uncaughtException', listener);
+				});
+				expect(exception).to.equal(123);
+				done();
+			};
+			process.on('uncaughtException', newListener);
+
+			// Do test
+			new Promise(function(resolve) {
+				setTimeout(resolve, 5);
+			}).then(function() {
+				throw 123;
+			}).catch(pasync.abort);
+		});
 	});
 });
