@@ -1467,20 +1467,6 @@ describe('pasync', function() {
 			}).catch(done);
 		});
 
-		it('someSeries', function(done) {
-			var arr = [1, 2, 3];
-			pasync.some(arr, function(item) {
-				return new Promise(function(resolve) {
-					setImmediate(function() {
-						resolve(item === 2);
-					});
-				});
-			}).then(function(res) {
-				expect(res).to.equal(true);
-				done();
-			}).catch(done);
-		});
-
 		it('detectLimit', function(done) {
 			var arr = [1, 2, 3];
 			pasync.detectLimit(arr, 1, function(item) {
@@ -1495,9 +1481,65 @@ describe('pasync', function() {
 			}).catch(done);
 		});
 
+		it('everySeries', function(done) {
+			var arr = [1, 2, 3];
+			pasync.everySeries(arr, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item === 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.equal(false);
+				done();
+			}).catch(done);
+		});
+
+		it('everyLimit', function(done) {
+			var arr = [1, 2, 3];
+			pasync.everyLimit(arr, 2, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item === 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.equal(false);
+				done();
+			}).catch(done);
+		});
+
+		it('filterLimit', function(done) {
+			var arr = [1, 2, 3];
+			pasync.filterLimit(arr, 2, function(el) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(el > 1);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([2, 3]);
+				done();
+			}).catch(done);
+		});
+
+		it('someSeries', function(done) {
+			var arr = [1, 2, 3];
+			pasync.someSeries(arr, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item === 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.equal(true);
+				done();
+			}).catch(done);
+		});
+
 		it('sortBySeries', function(done) {
 			var arr = [3, 5, 2, 1, 4];
-			pasync.sortBy(arr, function(item) {
+			pasync.sortBySeries(arr, function(item) {
 				return new Promise(function(resolve) {
 					setImmediate(function() {
 						resolve(item);
