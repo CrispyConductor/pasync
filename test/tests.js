@@ -1509,6 +1509,20 @@ describe('pasync', function() {
 			}).catch(done);
 		});
 
+		it('filterLimit', function(done) {
+			var arr = [1, 2, 3];
+			pasync.filterLimit(arr, 12, function(el) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(el > 1);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([2, 3]);
+				done();
+			}).catch(done);
+		});
+
 		it('someSeries', function(done) {
 			var arr = [1, 2, 3];
 			pasync.someSeries(arr, function(item) {

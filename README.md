@@ -81,6 +81,7 @@ have error handling, such as `async.filter` .
 * detectLimit
 * everySeries
 * everyLimit
+* filterLimit
 * someSeries
 * sortBySeries
 
