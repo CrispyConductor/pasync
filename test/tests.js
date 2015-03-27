@@ -1447,7 +1447,7 @@ describe('pasync', function() {
 
 		it('sortBySeries', function(done) {
 			var arr = [3, 5, 2, 1, 4];
-			pasync.sortBy(arr, function(item) {
+			pasync.sortBySeries(arr, function(item) {
 				return new Promise(function(resolve) {
 					setImmediate(function() {
 						resolve(item);
