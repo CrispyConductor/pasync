@@ -80,6 +80,7 @@ have error handling, such as `async.filter` .
 * mapValuesLimit
 * detectLimit
 * everySeries
+* everyLimit
 * someSeries
 * sortBySeries
 
