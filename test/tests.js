@@ -1467,20 +1467,6 @@ describe('pasync', function() {
 			}).catch(done);
 		});
 
-		it('someSeries', function(done) {
-			var arr = [1, 2, 3];
-			pasync.someSeries(arr, function(item) {
-				return new Promise(function(resolve) {
-					setImmediate(function() {
-						resolve(item === 2);
-					});
-				});
-			}).then(function(res) {
-				expect(res).to.equal(true);
-				done();
-			}).catch(done);
-		});
-
 		it('detectLimit', function(done) {
 			var arr = [1, 2, 3];
 			pasync.detectLimit(arr, 1, function(item) {
@@ -1491,6 +1477,34 @@ describe('pasync', function() {
 				});
 			}).then(function(res) {
 				expect(res).to.equal(2);
+				done();
+			}).catch(done);
+		});
+
+		it('everySeries', function(done) {
+			var arr = [1, 2, 3];
+			pasync.everySeries(arr, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item === 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.equal(false);
+				done();
+			}).catch(done);
+		});
+
+		it('someSeries', function(done) {
+			var arr = [1, 2, 3];
+			pasync.someSeries(arr, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item === 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.equal(true);
 				done();
 			}).catch(done);
 		});
