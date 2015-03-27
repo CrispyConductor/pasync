@@ -77,6 +77,7 @@ have error handling, such as `async.filter` .
 * concatLimit
 * mapValues
 * mapValuesSeries
+* mapValuesLimit
 * detectLimit
 * someSeries
 * sortBySeries
