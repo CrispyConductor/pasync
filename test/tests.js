@@ -1511,7 +1511,7 @@ describe('pasync', function() {
 
 		it('filterLimit', function(done) {
 			var arr = [1, 2, 3];
-			pasync.filterLimit(arr, 12, function(el) {
+			pasync.filterLimit(arr, 2, function(el) {
 				return new Promise(function(resolve) {
 					setImmediate(function() {
 						resolve(el > 1);
