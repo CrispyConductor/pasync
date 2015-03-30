@@ -1634,6 +1634,18 @@ describe('pasync', function() {
 				done();
 			}).catch(done);
 		});
+
+		it('transform', function(done) {
+			var arr = [2, 3, 4];
+			pasync.transform(arr, function(result, n) {
+				result.push(n *= n);
+				Promise.resolve();
+			}).then(function(res){
+				expect(res).to.deep.equal([4, 9, 16]);
+				done();
+			}).catch(done);
+		});
+
 	});
 
 	describe('Utilities', function() {

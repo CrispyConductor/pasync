@@ -91,6 +91,7 @@ have error handling, such as `async.filter` .
 * someLimit
 * sortBySeries
 * sortByLimit
+* transform
 
 ## Functions not implemented
 
