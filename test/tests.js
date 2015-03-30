@@ -862,7 +862,7 @@ describe('pasync', function() {
 					}
 				});
 				if(isError) {
-					reject(123)
+					reject(123);
 				} else {
 					resolve();
 				}
@@ -1540,6 +1540,20 @@ describe('pasync', function() {
 		it('someSeries', function(done) {
 			var arr = [1, 2, 3];
 			pasync.someSeries(arr, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item === 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.equal(true);
+				done();
+			}).catch(done);
+		});
+
+		it('someLimit', function(done) {
+			var arr = [1, 2, 3];
+			pasync.someLimit(arr, 2, function(item) {
 				return new Promise(function(resolve) {
 					setImmediate(function() {
 						resolve(item === 2);
