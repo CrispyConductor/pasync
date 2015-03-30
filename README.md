@@ -87,6 +87,7 @@ have error handling, such as `async.filter` .
 * someSeries
 * someLimit
 * sortBySeries
+* sortByLimit
 
 ## Functions not implemented
 
