@@ -94,6 +94,7 @@ have error handling, such as `async.filter` .
 * transform
 * transformSeries
 * transformLimit
+* timesLimit
 
 ## Functions not implemented
 

@@ -1668,6 +1668,19 @@ describe('pasync', function() {
 			}).catch(done);
 		});
 
+		it('timesLimit', function(done) {
+			var timesCount = 0;
+			var timesTest = 2;
+			pasync.timesLimit(8, 2, function(n, next) {
+				timesCount++;
+				timesTest = timesTest * 2;
+				return Promise.resolve();
+			}).then(function() {
+				expect(timesCount).to.equal(8);
+				expect(timesTest).to.equal(512);
+				done();
+			}).catch(done);
+		});
 	});
 
 	describe('Utilities', function() {
