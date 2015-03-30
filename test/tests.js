@@ -1523,44 +1523,144 @@ describe('pasync', function() {
 			}).catch(done);
 		});
 
-		it('pick', function(done) {
-			var arr = [1, 2, 3];
-			pasync.pick(arr, function(el) {
+		it('pick with array', function(done) {
+			var arr = [1, 3, 2, 4];
+			var responseArray = [];
+			pasync.pick(arr, function(num) {
 				return new Promise(function(resolve) {
-					setImmediate(function() {
-						resolve(el > 1);
-					});
+					setTimeout(function() {
+						if(this && this.round) {
+							num = this.round(num);
+						}
+						responseArray.push(num);
+						resolve(num % 2);
+					}, num * 2);
 				});
 			}).then(function(res) {
-				expect(res).to.deep.equal([2, 3]);
+				expect(res).to.deep.equal([1, 3]);
+				expect(responseArray).to.deep.equal([1, 2, 3, 4]);
 				done();
 			}).catch(done);
 		});
 
-		it('pickSeries', function(done) {
-			var arr = [1, 2, 3];
-			pasync.pickSeries(arr, function(el) {
+		it('pick with object', function(done) {
+			var arr = {
+				a: 4,
+				b: 3,
+				c: 2
+			};
+			var responseArray = [];
+			pasync.pick(arr, function(num) {
 				return new Promise(function(resolve) {
-					setImmediate(function() {
-						resolve(el > 1);
-					});
+					setTimeout(function() {
+						if(this && this.round) {
+							num = this.round(num);
+						}
+						responseArray.push(num);
+						resolve(num % 2);
+					}, num * 2);
 				});
 			}).then(function(res) {
-				expect(res).to.deep.equal([2, 3]);
+				expect(res).to.deep.equal({
+					b: 3
+				});
+				expect(responseArray).to.deep.equal([2, 3, 4]);
 				done();
 			}).catch(done);
 		});
 
-		it('pickLimit', function(done) {
-			var arr = [1, 2, 3];
-			pasync.pickLimit(arr, 2, function(el) {
+		it('pickSeries with array', function(done) {
+			var arr = [1, 3, 2, 4];
+			var responseArray = [];
+			pasync.pickSeries(arr, function(num) {
 				return new Promise(function(resolve) {
-					setImmediate(function() {
-						resolve(el > 1);
-					});
+					setTimeout(function() {
+						if(this && this.round) {
+							num = this.round(num);
+						}
+						responseArray.push(num);
+						resolve(num % 2);
+					}, num * 2);
 				});
 			}).then(function(res) {
-				expect(res).to.deep.equal([2, 3]);
+				expect(res).to.deep.equal([1, 3]);
+				expect(responseArray).to.deep.equal([1, 3, 2, 4]);
+				done();
+			}).catch(done);
+		});
+
+		it('pickSeries with object', function(done) {
+			var arr = {
+				a: 4,
+				b: 3,
+				c: 2
+			};
+			var responseArray = [];
+			pasync.pickSeries(arr, function(num) {
+				return new Promise(function(resolve) {
+					setTimeout(function() {
+						if(this && this.round) {
+							num = this.round(num);
+						}
+						responseArray.push(num);
+						resolve(num % 2);
+					}, num * 2);
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal({
+					b: 3
+				});
+				expect(responseArray).to.deep.equal([4, 3, 2]);
+				done();
+			}).catch(done);
+		});
+
+		it('pickLimit with array', function(done) {
+			var responseArray = [];
+			var arr = [1, 5, 3, 2, 4];
+			pasync.pickLimit(arr, 2, function(num) {
+				return new Promise(function(resolve) {
+					setTimeout(function() {
+						if(this && this.round) {
+							num = this.round(num);
+						}
+						responseArray.push(num);
+						resolve(num % 2);
+					}, num * 2);
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([1, 5, 3]);
+				expect(responseArray).to.deep.equal([1, 3, 5, 2, 4]);
+				done();
+			}).catch(done);
+		});
+
+		it('pickLimit with object', function(done) {
+			var responseArray = [];
+			var arr = {
+				a: 1,
+				b: 5,
+				c: 3,
+				d: 2,
+				e: 4
+			};
+			pasync.pickLimit(arr, 2, function(num) {
+				return new Promise(function(resolve) {
+					setTimeout(function() {
+						if(this && this.round) {
+							num = this.round(num);
+						}
+						responseArray.push(num);
+						resolve(num % 2);
+					}, num * 2);
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal({
+					a: 1,
+					b: 5,
+					c: 3
+				});
+				expect(responseArray).to.deep.equal([1, 3, 5, 2, 4]);
 				done();
 			}).catch(done);
 		});
