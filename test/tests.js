@@ -1736,34 +1736,76 @@ describe('pasync', function() {
 		});
 
 		it('transform', function(done) {
-			var arr = [2, 3, 4];
-			pasync.transform(arr, function(result, n) {
-				result.push(n *= n);
-				Promise.resolve();
+			var arr = [1, 5, 3, 2, 4];
+			var responseArray = [];
+			pasync.transform(arr, function(memo, num) {
+				return new Promise(function(resolve) {
+					setTimeout(function() {
+						if(this && this.round) {
+							num = this.round(num);
+						}
+						if(num % 2 === 1) {
+							if(Array.isArray(memo)) {
+								memo.push(num);
+							}
+						}
+						responseArray.push(num)
+						resolve();
+					}, num * 5);
+				});
 			}).then(function(res){
-				expect(res).to.deep.equal([4, 9, 16]);
+				expect(res).to.deep.equal([1, 3, 5]);
+				expect(responseArray).to.deep.equal([1, 2, 3, 4, 5]);
 				done();
 			}).catch(done);
 		});
 
 		it('transformSeries', function(done) {
-			var arr = [2, 3, 4];
-			pasync.transformSeries(arr, function(result, n) {
-				result.push(n *= n);
-				Promise.resolve();
+			var arr = [1, 3, 2, 4];
+			var responseArray = [];
+			pasync.transformSeries(arr, function(memo, num) {
+				return new Promise(function(resolve) {
+					setTimeout(function() {
+						if(this && this.round) {
+							num = this.round(num);
+						}
+						if(num % 2 === 1) {
+							if(Array.isArray(memo)) {
+								memo.push(num);
+							}
+						}
+						responseArray.push(num)
+						resolve();
+					}, num * 2);
+				});
 			}).then(function(res){
-				expect(res).to.deep.equal([4, 9, 16]);
+				expect(res).to.deep.equal([1, 3]);
+				expect(responseArray).to.deep.equal([1, 3, 2, 4]);
 				done();
 			}).catch(done);
 		});
 
 		it('transformLimit', function(done) {
-			var arr = [2, 3, 4];
-			pasync.transformLimit(arr, 2, function(result, n) {
-				result.push(n *= n);
-				Promise.resolve();
+			var arr = [1, 5, 3, 2, 4];
+			var responseArray = [];
+			pasync.transformLimit(arr, 2, function(memo, num) {
+				return new Promise(function(resolve) {
+					setTimeout(function() {
+						if(this && this.round) {
+							num = this.round(num);
+						}
+						if(num % 2 === 1) {
+							if(Array.isArray(memo)) {
+								memo.push(num);
+							}
+						}
+						responseArray.push(num)
+						resolve();
+					}, num * 2);
+				});
 			}).then(function(res){
-				expect(res).to.deep.equal([4, 9, 16]);
+				expect(res).to.deep.equal([1, 3, 5]);
+				expect(responseArray).to.deep.equal([1, 3, 5, 2, 4]);
 				done();
 			}).catch(done);
 		});
