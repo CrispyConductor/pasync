@@ -1523,6 +1523,20 @@ describe('pasync', function() {
 			}).catch(done);
 		});
 
+		it('pick', function(done) {
+			var arr = [1, 2, 3];
+			pasync.pick(arr, function(el) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(el > 1);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([2, 3]);
+				done();
+			}).catch(done);
+		});
+
 		it('rejectLimit', function(done) {
 			var arr = [1, 2, 3];
 			pasync.rejectLimit(arr, 1, function(el) {
