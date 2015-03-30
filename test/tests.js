@@ -1551,6 +1551,20 @@ describe('pasync', function() {
 			}).catch(done);
 		});
 
+		it('pickLimit', function(done) {
+			var arr = [1, 2, 3];
+			pasync.pickLimit(arr, 2, function(el) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(el > 1);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([2, 3]);
+				done();
+			}).catch(done);
+		});
+
 		it('rejectLimit', function(done) {
 			var arr = [1, 2, 3];
 			pasync.rejectLimit(arr, 1, function(el) {

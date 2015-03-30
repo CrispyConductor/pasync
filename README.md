@@ -84,6 +84,7 @@ have error handling, such as `async.filter` .
 * filterLimit
 * pick
 * pickSeries
+* pickLimit
 * rejectLimit
 * selectLimit
 * someSeries
