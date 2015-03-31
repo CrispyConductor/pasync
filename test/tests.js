@@ -862,7 +862,7 @@ describe('pasync', function() {
 					}
 				});
 				if(isError) {
-					reject(123)
+					reject(123);
 				} else {
 					resolve();
 				}
@@ -1523,9 +1523,161 @@ describe('pasync', function() {
 			}).catch(done);
 		});
 
+		it('pick with array', function(done) {
+			var arr = [1, 3, 2, 4];
+			var responseArray = [];
+			pasync.pick(arr, function(num) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						responseArray.push(num);
+						resolve(num % 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([1, 3]);
+				expect(responseArray).to.deep.equal([1, 3, 2, 4]);
+				done();
+			}).catch(done);
+		});
+
+		it('pick with object', function(done) {
+			var arr = {
+				a: 4,
+				b: 3,
+				c: 2
+			};
+			var responseArray = [];
+			pasync.pick(arr, function(num) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						responseArray.push(num);
+						resolve(num % 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal({
+					b: 3
+				});
+				expect(responseArray).to.deep.equal([4, 3, 2]);
+				done();
+			}).catch(done);
+		});
+
+		it('pickSeries with array', function(done) {
+			var arr = [1, 3, 2, 4];
+			var responseArray = [];
+			pasync.pickSeries(arr, function(num) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						responseArray.push(num);
+						resolve(num % 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([1, 3]);
+				expect(responseArray).to.deep.equal([1, 3, 2, 4]);
+				done();
+			}).catch(done);
+		});
+
+		it('pickSeries with object', function(done) {
+			var arr = {
+				a: 4,
+				b: 3,
+				c: 2
+			};
+			var responseArray = [];
+			pasync.pickSeries(arr, function(num) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						responseArray.push(num);
+						resolve(num % 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal({
+					b: 3
+				});
+				expect(responseArray).to.deep.equal([4, 3, 2]);
+				done();
+			}).catch(done);
+		});
+
+		it('pickLimit with array', function(done) {
+			var responseArray = [];
+			var arr = [1, 5, 3, 2, 4];
+			pasync.pickLimit(arr, 2, function(num) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						responseArray.push(num);
+						resolve(num % 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([1, 5, 3]);
+				expect(responseArray).to.deep.equal([1, 5, 3, 2, 4]);
+				done();
+			}).catch(done);
+		});
+
+		it('pickLimit with object', function(done) {
+			var responseArray = [];
+			var arr = {
+				a: 1,
+				b: 5,
+				c: 3,
+				d: 2,
+				e: 4
+			};
+			pasync.pickLimit(arr, 2, function(num) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						responseArray.push(num);
+						resolve(num % 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal({
+					a: 1,
+					b: 5,
+					c: 3
+				});
+				expect(responseArray).to.deep.equal([1, 5, 3, 2, 4]);
+				done();
+			}).catch(done);
+		});
+
+		it('rejectLimit', function(done) {
+			var arr = [1, 2, 3];
+			pasync.rejectLimit(arr, 1, function(el) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(el > 1);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([1]);
+				done();
+			}).catch(done);
+		});
+
 		it('someSeries', function(done) {
 			var arr = [1, 2, 3];
 			pasync.someSeries(arr, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item === 2);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.equal(true);
+				done();
+			}).catch(done);
+		});
+
+		it('someLimit', function(done) {
+			var arr = [1, 2, 3];
+			pasync.someLimit(arr, 2, function(item) {
 				return new Promise(function(resolve) {
 					setImmediate(function() {
 						resolve(item === 2);
@@ -1547,6 +1699,100 @@ describe('pasync', function() {
 				});
 			}).then(function(res) {
 				expect(res).to.deep.equal([1, 2, 3, 4, 5]);
+				done();
+			}).catch(done);
+		});
+
+		it('sortByLimit', function(done) {
+			var arr = [3, 5, 2, 1, 4];
+			pasync.sortByLimit(arr, 3, function(item) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						resolve(item);
+					});
+				});
+			}).then(function(res) {
+				expect(res).to.deep.equal([1, 2, 3, 4, 5]);
+				done();
+			}).catch(done);
+		});
+
+		it('transform', function(done) {
+			var arr = [1, 5, 3, 2, 4];
+			var responseArray = [];
+			pasync.transform(arr, function(memo, num) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						if(num % 2 === 1) {
+							if(Array.isArray(memo)) {
+								memo.push(num);
+							}
+						}
+						responseArray.push(num)
+						resolve();
+					});
+				});
+			}).then(function(res){
+				expect(res).to.deep.equal([1, 5, 3]);
+				expect(responseArray).to.deep.equal([1, 5, 3, 2, 4]);
+				done();
+			}).catch(done);
+		});
+
+		it('transformSeries', function(done) {
+			var arr = [1, 3, 2, 4];
+			var responseArray = [];
+			pasync.transformSeries(arr, function(memo, num) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						if(num % 2 === 1) {
+							if(Array.isArray(memo)) {
+								memo.push(num);
+							}
+						}
+						responseArray.push(num)
+						resolve();
+					});
+				});
+			}).then(function(res){
+				expect(res).to.deep.equal([1, 3]);
+				expect(responseArray).to.deep.equal([1, 3, 2, 4]);
+				done();
+			}).catch(done);
+		});
+
+		it('transformLimit', function(done) {
+			var arr = [1, 5, 3, 2, 4];
+			var responseArray = [];
+			pasync.transformLimit(arr, 2, function(memo, num) {
+				return new Promise(function(resolve) {
+					setImmediate(function() {
+						if(num % 2 === 1) {
+							if(Array.isArray(memo)) {
+								memo.push(num);
+							}
+						}
+						responseArray.push(num)
+						resolve();
+					});
+				});
+			}).then(function(res){
+				expect(res).to.deep.equal([1, 5, 3]);
+				expect(responseArray).to.deep.equal([1, 5, 3, 2, 4]);
+				done();
+			}).catch(done);
+		});
+
+		it('timesLimit', function(done) {
+			var timesCount = 0;
+			var timesTest = 2;
+			pasync.timesLimit(8, 2, function(n, next) {
+				timesCount++;
+				timesTest = timesTest * 2;
+				return Promise.resolve();
+			}).then(function() {
+				expect(timesCount).to.equal(8);
+				expect(timesTest).to.equal(512);
 				done();
 			}).catch(done);
 		});
