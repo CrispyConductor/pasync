@@ -1528,17 +1528,14 @@ describe('pasync', function() {
 			var responseArray = [];
 			pasync.pick(arr, function(num) {
 				return new Promise(function(resolve) {
-					setTimeout(function() {
-						if(this && this.round) {
-							num = this.round(num);
-						}
+					setImmediate(function() {
 						responseArray.push(num);
 						resolve(num % 2);
-					}, num * 2);
+					});
 				});
 			}).then(function(res) {
 				expect(res).to.deep.equal([1, 3]);
-				expect(responseArray).to.deep.equal([1, 2, 3, 4]);
+				expect(responseArray).to.deep.equal([1, 3, 2, 4]);
 				done();
 			}).catch(done);
 		});
@@ -1552,19 +1549,16 @@ describe('pasync', function() {
 			var responseArray = [];
 			pasync.pick(arr, function(num) {
 				return new Promise(function(resolve) {
-					setTimeout(function() {
-						if(this && this.round) {
-							num = this.round(num);
-						}
+					setImmediate(function() {
 						responseArray.push(num);
 						resolve(num % 2);
-					}, num * 2);
+					});
 				});
 			}).then(function(res) {
 				expect(res).to.deep.equal({
 					b: 3
 				});
-				expect(responseArray).to.deep.equal([2, 3, 4]);
+				expect(responseArray).to.deep.equal([4, 3, 2]);
 				done();
 			}).catch(done);
 		});
@@ -1574,13 +1568,10 @@ describe('pasync', function() {
 			var responseArray = [];
 			pasync.pickSeries(arr, function(num) {
 				return new Promise(function(resolve) {
-					setTimeout(function() {
-						if(this && this.round) {
-							num = this.round(num);
-						}
+					setImmediate(function() {
 						responseArray.push(num);
 						resolve(num % 2);
-					}, num * 2);
+					});
 				});
 			}).then(function(res) {
 				expect(res).to.deep.equal([1, 3]);
@@ -1598,13 +1589,10 @@ describe('pasync', function() {
 			var responseArray = [];
 			pasync.pickSeries(arr, function(num) {
 				return new Promise(function(resolve) {
-					setTimeout(function() {
-						if(this && this.round) {
-							num = this.round(num);
-						}
+					setImmediate(function() {
 						responseArray.push(num);
 						resolve(num % 2);
-					}, num * 2);
+					});
 				});
 			}).then(function(res) {
 				expect(res).to.deep.equal({
@@ -1620,17 +1608,14 @@ describe('pasync', function() {
 			var arr = [1, 5, 3, 2, 4];
 			pasync.pickLimit(arr, 2, function(num) {
 				return new Promise(function(resolve) {
-					setTimeout(function() {
-						if(this && this.round) {
-							num = this.round(num);
-						}
+					setImmediate(function() {
 						responseArray.push(num);
 						resolve(num % 2);
-					}, num * 2);
+					});
 				});
 			}).then(function(res) {
 				expect(res).to.deep.equal([1, 5, 3]);
-				expect(responseArray).to.deep.equal([1, 3, 5, 2, 4]);
+				expect(responseArray).to.deep.equal([1, 5, 3, 2, 4]);
 				done();
 			}).catch(done);
 		});
@@ -1646,13 +1631,10 @@ describe('pasync', function() {
 			};
 			pasync.pickLimit(arr, 2, function(num) {
 				return new Promise(function(resolve) {
-					setTimeout(function() {
-						if(this && this.round) {
-							num = this.round(num);
-						}
+					setImmediate(function() {
 						responseArray.push(num);
 						resolve(num % 2);
-					}, num * 2);
+					});
 				});
 			}).then(function(res) {
 				expect(res).to.deep.equal({
@@ -1660,7 +1642,7 @@ describe('pasync', function() {
 					b: 5,
 					c: 3
 				});
-				expect(responseArray).to.deep.equal([1, 3, 5, 2, 4]);
+				expect(responseArray).to.deep.equal([1, 5, 3, 2, 4]);
 				done();
 			}).catch(done);
 		});
@@ -1740,10 +1722,7 @@ describe('pasync', function() {
 			var responseArray = [];
 			pasync.transform(arr, function(memo, num) {
 				return new Promise(function(resolve) {
-					setTimeout(function() {
-						if(this && this.round) {
-							num = this.round(num);
-						}
+					setImmediate(function() {
 						if(num % 2 === 1) {
 							if(Array.isArray(memo)) {
 								memo.push(num);
@@ -1751,11 +1730,11 @@ describe('pasync', function() {
 						}
 						responseArray.push(num)
 						resolve();
-					}, num * 5);
+					});
 				});
 			}).then(function(res){
-				expect(res).to.deep.equal([1, 3, 5]);
-				expect(responseArray).to.deep.equal([1, 2, 3, 4, 5]);
+				expect(res).to.deep.equal([1, 5, 3]);
+				expect(responseArray).to.deep.equal([1, 5, 3, 2, 4]);
 				done();
 			}).catch(done);
 		});
@@ -1765,10 +1744,7 @@ describe('pasync', function() {
 			var responseArray = [];
 			pasync.transformSeries(arr, function(memo, num) {
 				return new Promise(function(resolve) {
-					setTimeout(function() {
-						if(this && this.round) {
-							num = this.round(num);
-						}
+					setImmediate(function() {
 						if(num % 2 === 1) {
 							if(Array.isArray(memo)) {
 								memo.push(num);
@@ -1776,7 +1752,7 @@ describe('pasync', function() {
 						}
 						responseArray.push(num)
 						resolve();
-					}, num * 2);
+					});
 				});
 			}).then(function(res){
 				expect(res).to.deep.equal([1, 3]);
@@ -1790,10 +1766,7 @@ describe('pasync', function() {
 			var responseArray = [];
 			pasync.transformLimit(arr, 2, function(memo, num) {
 				return new Promise(function(resolve) {
-					setTimeout(function() {
-						if(this && this.round) {
-							num = this.round(num);
-						}
+					setImmediate(function() {
 						if(num % 2 === 1) {
 							if(Array.isArray(memo)) {
 								memo.push(num);
@@ -1801,11 +1774,11 @@ describe('pasync', function() {
 						}
 						responseArray.push(num)
 						resolve();
-					}, num * 2);
+					});
 				});
 			}).then(function(res){
-				expect(res).to.deep.equal([1, 3, 5]);
-				expect(responseArray).to.deep.equal([1, 3, 5, 2, 4]);
+				expect(res).to.deep.equal([1, 5, 3]);
+				expect(responseArray).to.deep.equal([1, 5, 3, 2, 4]);
 				done();
 			}).catch(done);
 		});
