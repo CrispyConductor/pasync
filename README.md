@@ -68,6 +68,7 @@ have error handling, such as `async.filter` .
 * cargo
 * auto
 * retry
+* apply
 * nextTick
 * times
 * timesSeries

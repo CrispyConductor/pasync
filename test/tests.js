@@ -977,6 +977,23 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('apply', function(done) {
+	var arr = [0, 1, 2];
+		var responseArray = [];
+		pasync.parallel([
+			pasync.apply(function(myArr) {
+				myArr.forEach(function(item) {
+					responseArray.push(++item);
+				});
+			}, arr)
+		]).then(function() {
+			expect(responseArray).to.contain(1);
+			expect(responseArray).to.contain(2);
+			expect(responseArray).to.contain(3);
+			done();
+		}).catch(done);
+	});
+
 	it('nextTick', function(done) {
 		var resultArray = [];
 		new Promise(function(resolve) {
