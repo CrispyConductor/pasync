@@ -1071,11 +1071,10 @@ describe('pasync', function() {
 	});
 
 	it('memoize', function(done) {
-		var myMemo;
 		var myFunc = function(up) {
 			return Promise.resolve(up * 2);
 		};
-		myMemo = pasync.memoize(myFunc);
+		var myMemo = pasync.memoize(myFunc);
 		myMemo(2).then(function(thing) {
 			expect(thing).to.equal(4);
 			done();
