@@ -1770,7 +1770,7 @@ describe('pasync', function() {
 								memo.push(num);
 							}
 						}
-						responseArray.push(num)
+						responseArray.push(num);
 						resolve();
 					});
 				});
@@ -1792,7 +1792,7 @@ describe('pasync', function() {
 								memo.push(num);
 							}
 						}
-						responseArray.push(num)
+						responseArray.push(num);
 						resolve();
 					});
 				});
@@ -1814,7 +1814,7 @@ describe('pasync', function() {
 								memo.push(num);
 							}
 						}
-						responseArray.push(num)
+						responseArray.push(num);
 						resolve();
 					});
 				});
