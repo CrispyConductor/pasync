@@ -1070,6 +1070,31 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('memoize', function(done) {
+		var myMemo;
+		var myFunc = function(up) {
+			return Promise.resolve(up * 2);
+		};
+		myMemo = pasync.memoize(myFunc);
+		myMemo(2).then(function(thing) {
+			expect(thing).to.equal(4);
+			done();
+		}).catch(done);
+	});
+
+	it('unmemoize', function(done) {
+		var myMemo;
+		var myFunc = function(up) {
+			return Promise.resolve(up * 2);
+		};
+		myMemo = pasync.memoize(myFunc);
+		var noMemo = pasync.unmemoize(myMemo);
+		noMemo(2).then(function(thing) {
+			expect(thing).to.equal(4);
+			done();
+		}).catch(done);
+	});
+
 	describe('Neo-Async Improvement of Convenience Support', function() {
 		var testObject = {
 			notRed: 'red',
