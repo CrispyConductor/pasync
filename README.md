@@ -124,3 +124,9 @@ getUser(nonexistent_id).then(function(user) {
 	cunsil.lug(err);
 }).catch(pasync.abort);	// This will catch the undefined variable error and throw it globally
 ```
+
+## Contributors
+
+- crispy1989
+- crowelch
+
