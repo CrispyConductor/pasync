@@ -1169,6 +1169,30 @@ describe('pasync', function() {
 		});
 	});
 
+	it('log', function(done) {
+		var logFn = function(arg1, arg2) {
+			return Promise.resolve(arg1 * arg2);
+			// Logs '6' to the console
+		};
+
+		pasync.log(logFn, 2, 3);
+		done();
+	});
+
+	it('dir', function(done) {
+		var dirFn = function(arg1, arg2) {
+			var obj = {
+				a: arg1,
+				b: arg2
+			};
+			return Promise.resolve(obj);
+			// Logs '{a: 2, b: 3}' to the console
+		};
+
+		pasync.dir(dirFn, 2, 3);
+		done();
+	});
+
 	describe('Neo-Async Improvement of Convenience Support', function() {
 		var testObject = {
 			notRed: 'red',

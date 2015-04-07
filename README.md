@@ -74,6 +74,8 @@ have error handling, such as `async.filter` .
 * timesSeries
 * memoize
 * unmemoize
+* log
+* dir
 
 ## Neo-Async Functions Implemented
 
@@ -102,8 +104,6 @@ have error handling, such as `async.filter` .
 ## Functions not implemented
 
 * iterator
-* log
-* dir
 * noConflict
 
 ## Other Utilities
