@@ -977,6 +977,23 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('apply', function(done) {
+	var arr = [0, 1, 2];
+		var responseArray = [];
+		pasync.parallel([
+			pasync.apply(function(myArr) {
+				myArr.forEach(function(item) {
+					responseArray.push(++item);
+				});
+			}, arr)
+		]).then(function() {
+			expect(responseArray).to.contain(1);
+			expect(responseArray).to.contain(2);
+			expect(responseArray).to.contain(3);
+			done();
+		}).catch(done);
+	});
+
 	it('nextTick', function(done) {
 		var resultArray = [];
 		new Promise(function(resolve) {
@@ -1051,6 +1068,105 @@ describe('pasync', function() {
 			expect(err).to.equal(123);
 			done();
 		}).catch(done);
+	});
+
+	it('memoize', function(done) {
+		var responseArray = [];
+		var memoCount = 0;
+		var myFunc = function(up, down, no) {
+			memoCount++;
+			return Promise.resolve(up * down * no);
+		};
+		var myMemo = pasync.memoize(myFunc);
+		myMemo(2, 4, 3).then(function(result) {
+			responseArray.push(result);
+			expect(result).to.equal(24);
+		}).then(function() {
+			myMemo(0, 4, 3).then(function(result) {
+				responseArray.push(result);
+				expect(result).to.equal(0);
+			}).then(function() {
+				myMemo(2, 4, 3).then(function(result) {
+					responseArray.push(result);
+					expect(result).to.equal(24);
+				}).then(function() {
+					expect(responseArray).to.contain(24);
+					expect(responseArray).to.contain(0);
+					expect(Object.keys(myMemo.memo).length).to.equal(2);
+					expect(memoCount).to.equal(2);
+					done();
+				}).catch(done);
+			});
+		});
+	});
+
+	it('memoize with hasher', function(done) {
+		var responseArray = [];
+		var memoCount = 0;
+		var hasher = function() {
+			var hashed = 1;
+			var args = Array.prototype.slice.call(arguments, 0);
+			args.forEach(function(arg) {
+				hashed *= arg;
+			});
+			return hashed;
+		};
+		var myFunc = function(up, down, no) {
+			memoCount++;
+			return Promise.resolve(up * down * no);
+		};
+		var myMemo = pasync.memoize(myFunc, hasher);
+		myMemo(2, 4, 3).then(function(result) {
+			responseArray.push(result);
+			expect(result).to.equal(24);
+		}).then(function() {
+			myMemo(0, 4, 3).then(function(result) {
+				responseArray.push(result);
+				expect(result).to.equal(0);
+			}).then(function() {
+				myMemo(2, 4, 3).then(function(result) {
+					responseArray.push(result);
+					expect(result).to.equal(24);
+				}).then(function() {
+					expect(responseArray).to.deep.equal([24, 0, 24]);
+					expect(responseArray).to.contain(0);
+					expect(Object.keys(myMemo.memo).length).to.equal(2);
+					expect(memoCount).to.equal(2);
+					done();
+				}).catch(done);
+			});
+		});
+	});
+
+	it('unmemoize', function(done) {
+		var memoCount = 0;
+		var responseArray = [];
+		var myMemo;
+		var myFunc = function(up) {
+			memoCount++;
+			return Promise.resolve(up * 2);
+		};
+		myMemo = pasync.memoize(myFunc);
+		var noMemo = pasync.unmemoize(myMemo);
+		noMemo(2).then(function(result) {
+			responseArray.push(result);
+		}).then(function() {
+			noMemo(2).then(function(result) {
+				responseArray.push(result);
+			}).then(function() {
+				noMemo(12).then(function(result) {
+					responseArray.push(result);
+				}).then(function(){
+					expect(typeof myMemo.unmemoize).to.equal('function');
+					expect(Object.keys(myMemo.memo).length).to.equal(0);
+					expect(noMemo.memo).to.equal(undefined);
+					expect(noMemo.unmemoize).to.equal(undefined);
+					expect(memoCount).to.equal(3);
+					expect(responseArray).to.deep.equal([4, 4, 24]);
+					done();
+				}).catch(done);
+			});
+		});
 	});
 
 	describe('Neo-Async Improvement of Convenience Support', function() {
@@ -1728,7 +1844,7 @@ describe('pasync', function() {
 								memo.push(num);
 							}
 						}
-						responseArray.push(num)
+						responseArray.push(num);
 						resolve();
 					});
 				});
@@ -1750,7 +1866,7 @@ describe('pasync', function() {
 								memo.push(num);
 							}
 						}
-						responseArray.push(num)
+						responseArray.push(num);
 						resolve();
 					});
 				});
@@ -1772,7 +1888,7 @@ describe('pasync', function() {
 								memo.push(num);
 							}
 						}
-						responseArray.push(num)
+						responseArray.push(num);
 						resolve();
 					});
 				});

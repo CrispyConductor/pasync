@@ -68,9 +68,12 @@ have error handling, such as `async.filter` .
 * cargo
 * auto
 * retry
+* apply
 * nextTick
 * times
 * timesSeries
+* memoize
+* unmemoize
 
 ## Neo-Async Functions Implemented
 
@@ -99,9 +102,6 @@ have error handling, such as `async.filter` .
 ## Functions not implemented
 
 * iterator
-* apply
-* memoize
-* unmemoize
 * log
 * dir
 * noConflict
