@@ -1078,26 +1078,24 @@ describe('pasync', function() {
 			return Promise.resolve(up * down * no);
 		};
 		var myMemo = pasync.memoize(myFunc);
-		new Promise(function(resolve, reject) {
-			myMemo(2, 4, 3).then(function(result) {
+		myMemo(2, 4, 3).then(function(result) {
+			responseArray.push(result);
+			expect(result).to.equal(24);
+		}).then(function() {
+			myMemo(0, 4, 3).then(function(result) {
 				responseArray.push(result);
-				expect(result).to.equal(24);
+				expect(result).to.equal(0);
 			}).then(function() {
-				myMemo(0, 4, 3).then(function(result) {
+				myMemo(2, 4, 3).then(function(result) {
 					responseArray.push(result);
-					expect(result).to.equal(0);
+					expect(result).to.equal(24);
 				}).then(function() {
-					myMemo(2, 4, 3).then(function(result) {
-						responseArray.push(result);
-						expect(result).to.equal(24);
-					}).then(function() {
-						expect(responseArray).to.contain(24);
-						expect(responseArray).to.contain(0);
-						expect(Object.keys(myMemo.memo).length).to.equal(2);
-						expect(memoCount).to.equal(2);
-						done();
-					}).catch(done);
-				});
+					expect(responseArray).to.contain(24);
+					expect(responseArray).to.contain(0);
+					expect(Object.keys(myMemo.memo).length).to.equal(2);
+					expect(memoCount).to.equal(2);
+					done();
+				}).catch(done);
 			});
 		});
 	});
@@ -1118,26 +1116,24 @@ describe('pasync', function() {
 			return Promise.resolve(up * down * no);
 		};
 		var myMemo = pasync.memoize(myFunc, hasher);
-		new Promise(function(resolve, reject) {
-			myMemo(2, 4, 3).then(function(result) {
+		myMemo(2, 4, 3).then(function(result) {
+			responseArray.push(result);
+			expect(result).to.equal(24);
+		}).then(function() {
+			myMemo(0, 4, 3).then(function(result) {
 				responseArray.push(result);
-				expect(result).to.equal(24);
+				expect(result).to.equal(0);
 			}).then(function() {
-				myMemo(0, 4, 3).then(function(result) {
+				myMemo(2, 4, 3).then(function(result) {
 					responseArray.push(result);
-					expect(result).to.equal(0);
+					expect(result).to.equal(24);
 				}).then(function() {
-					myMemo(2, 4, 3).then(function(result) {
-						responseArray.push(result);
-						expect(result).to.equal(24);
-					}).then(function() {
-						expect(responseArray).to.deep.equal([24, 0, 24]);
-						expect(responseArray).to.contain(0);
-						expect(Object.keys(myMemo.memo).length).to.equal(2);
-						expect(memoCount).to.equal(2);
-						done();
-					}).catch(done);
-				});
+					expect(responseArray).to.deep.equal([24, 0, 24]);
+					expect(responseArray).to.contain(0);
+					expect(Object.keys(myMemo.memo).length).to.equal(2);
+					expect(memoCount).to.equal(2);
+					done();
+				}).catch(done);
 			});
 		});
 	});
@@ -1155,17 +1151,21 @@ describe('pasync', function() {
 		noMemo(2).then(function(result) {
 			responseArray.push(result);
 		}).then(function() {
-			noMemo(12).then(function(result) {
+			noMemo(2).then(function(result) {
 				responseArray.push(result);
-			}).then(function(){
-				expect(typeof myMemo.unmemoize).to.equal('function');
-				expect(Object.keys(myMemo.memo).length).to.equal(0);
-				expect(noMemo.memo).to.equal(undefined);
-				expect(noMemo.unmemoize).to.equal(undefined);
-				expect(memoCount).to.equal(2);
-				expect(responseArray).to.deep.equal([4, 24]);
-				done();
-			}).catch(done);
+			}).then(function() {
+				noMemo(12).then(function(result) {
+					responseArray.push(result);
+				}).then(function(){
+					expect(typeof myMemo.unmemoize).to.equal('function');
+					expect(Object.keys(myMemo.memo).length).to.equal(0);
+					expect(noMemo.memo).to.equal(undefined);
+					expect(noMemo.unmemoize).to.equal(undefined);
+					expect(memoCount).to.equal(3);
+					expect(responseArray).to.deep.equal([4, 4, 24]);
+					done();
+				}).catch(done);
+			});
 		});
 	});
 
