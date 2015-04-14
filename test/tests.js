@@ -1963,5 +1963,107 @@ describe('pasync', function() {
 				throw 123;
 			}).catch(pasync.abort);
 		});
+
+		describe('all', function() {
+
+			it('result order', function(done) {
+				var numResolved = 0;
+				var p1 = new Promise(function(resolve) {
+					setTimeout(function() {
+						numResolved++;
+						resolve(1);
+					}, 2);
+				});
+				var p2 = new Promise(function(resolve) {
+					setTimeout(function() {
+						numResolved++;
+						resolve(2);
+					}, 6);
+				});
+				var p3 = new Promise(function(resolve) {
+					setTimeout(function() {
+						numResolved++;
+						resolve(3);
+					}, 4);
+				});
+				pasync.all([ p1, p2, p3 ]).then(function(results) {
+					expect(results).to.deep.equal([ 1, 2, 3 ]);
+					expect(numResolved).to.equal(3);
+					done();
+				}).catch(done);
+			});
+
+			it('pushing additional promises', function(done) {
+				var numResolved = 0;
+				var p1 = new Promise(function(resolve) {
+					setTimeout(function() {
+						numResolved++;
+						resolve(1);
+					}, 2);
+				});
+				var p2 = new Promise(function(resolve) {
+					setTimeout(function() {
+						numResolved++;
+						resolve(2);
+					}, 16);
+				});
+				var allPromise = pasync.all([ p1, p2 ]);
+				setTimeout(function() {
+					var p3 = new Promise(function(resolve) {
+						setTimeout(function() {
+							numResolved++;
+							resolve(3);
+						}, 18);
+					});
+					allPromise.push(p3);
+				}, 10);
+				allPromise.then(function(results) {
+					expect(results).to.deep.equal([ 1, 2, 3 ]);
+					expect(numResolved).to.equal(3);
+					done();
+				}).catch(done);
+			});
+
+			it('not resolved with passed no promises', function(done) {
+				var allPromise = pasync.all();
+				allPromise.then(function(results) {
+					expect(results).to.deep.equal([ 1 ]);
+					done();
+				}).catch(done);
+				setTimeout(function() {
+					var p1 = new Promise(function(resolve) {
+						setTimeout(function() {
+							resolve(1);
+						}, 2);
+					});
+					allPromise.push(p1);
+				}, 10);
+			});
+
+			it('errors', function(done) {
+				var p1 = new Promise(function(resolve) {
+					setTimeout(function() {
+						resolve(1);
+					}, 2);
+				});
+				var p2 = new Promise(function(resolve) {
+					setTimeout(function() {
+						resolve(2);
+					}, 6);
+				});
+				var p3 = new Promise(function(resolve, reject) {
+					setTimeout(function() {
+						reject('err');
+					}, 4);
+				});
+				pasync.all([ p1, p2, p3 ]).then(function() {
+					throw new Error('should not reach');
+				}).catch(function(err) {
+					expect(err).to.equal('err');
+					done();
+				});
+			});
+
+		});
 	});
 });

@@ -108,6 +108,31 @@ have error handling, such as `async.filter` .
 
 ## Other Utilities
 
+### all([promises])
+
+This is similar to ES6's `Promise.all()`, but with the following differences and enhancements:
+
+* The returned promise has a `push(promise)` method which allows you to add additional promises to
+  the pool after instantiation.  The returned promise only resolves once all promises added to it
+  have resolved.  It is an error to try to push a new promise after the returned promise has already
+  resolved.
+* Promises *may* be pushed after the returned promises has rejected.  In this case, newly pushed
+  promises are silently ignored.
+* The order of the result array is guaranteed to be the order that promises were added.
+* The `[promise1, promise2, ...]` parameter is optional.  If not passed (or is an empty array),
+  the returned promise will *not* resolve immediately; instead it will wait for at least one
+  promise to be pushed.
+
+Use it like this:
+
+```js
+var p = pasync.all([ promise1, promise2 ]);
+p.then(/* handlers */);
+// later ...
+p.push(promise3);
+p.push(promise4);
+```
+
 ### abort(err)
 
 This is intended to be used as a last-ditch error handler for promises.  Using
