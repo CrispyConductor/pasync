@@ -1503,6 +1503,29 @@ describe('pasync', function() {
 				done();
 			}).catch(done);
 		});
+
+		it('parallel as Object', function(done) {
+			var a = false, b = false;
+			var funcs = {
+				funcOne: function() {
+					return new Promise(function(resolve) {
+						a = true;
+						resolve();
+					});
+				},
+				funcTwo: function() {
+					return new Promise(function(resolve) {
+						b = true;
+						resolve();
+					});
+				}
+			};
+			pasync.parallel(funcs).then(function() {
+				expect(a).to.be.true;
+				expect(b).to.be.true;
+				done();
+			}).catch(done);
+		});
 	});
 
 	describe('Neo-Async features', function() {
