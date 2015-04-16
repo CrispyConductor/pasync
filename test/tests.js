@@ -393,17 +393,19 @@ describe('pasync', function() {
 			function() {
 				return new Promise(function(resolve) {
 					a = true;
-					resolve();
+					resolve(1);
 				});
 			},
 			function() {
 				return new Promise(function(resolve) {
 					b = true;
-					resolve();
+					resolve(2);
 				});
 			}
 		];
-		pasync.series(funcs).then(function() {
+		pasync.series(funcs).then(function(result) {
+			expect(result[0]).to.equal(1);
+			expect(result[1]).to.equal(2);
 			expect(a).to.be.true;
 			expect(b).to.be.true;
 			done();
@@ -487,17 +489,19 @@ describe('pasync', function() {
 			function() {
 				return new Promise(function(resolve) {
 					a = true;
-					resolve();
+					resolve(1);
 				});
 			},
 			function() {
 				return new Promise(function(resolve) {
 					b = true;
-					resolve();
+					resolve(2);
 				});
 			}
 		];
-		pasync.parallelLimit(funcs, 1).then(function() {
+		pasync.parallelLimit(funcs, 1).then(function(result) {
+			expect(result[0]).to.equal(1);
+			expect(result[1]).to.equal(2);
 			expect(a).to.be.true;
 			expect(b).to.be.true;
 			done();
@@ -1510,17 +1514,19 @@ describe('pasync', function() {
 				funcOne: function() {
 					return new Promise(function(resolve) {
 						a = true;
-						resolve();
+						resolve(1);
 					});
 				},
 				funcTwo: function() {
 					return new Promise(function(resolve) {
 						b = true;
-						resolve();
+						resolve(2);
 					});
 				}
 			};
-			pasync.parallel(funcs).then(function() {
+			pasync.parallel(funcs).then(function(result) {
+				expect(result.funcOne).to.equal(1);
+				expect(result.funcTwo).to.equal(2);
 				expect(a).to.be.true;
 				expect(b).to.be.true;
 				done();
