@@ -963,7 +963,7 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
-	it('retry with just task', function(done) {
+	it('retry with no times param', function(done) {
 		var responseArray = [];
 		var retry = pasync.retry(function() {
 			responseArray.push('a');
@@ -976,7 +976,7 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
-	it('retry with object as first argument', function(done) {
+	it('retry with object param', function(done) {
 		var responseArray = [];
 		var retry = pasync.retry({times: 12, interval: 8}, function() {
 			responseArray.push('a');
@@ -991,14 +991,42 @@ describe('pasync', function() {
 
 	it('retry with error', function(done) {
 		var retryCount = 0;
-		var retry = pasync.retry(3, function() {
+		var retry = pasync.retry(function() {
 			retryCount++;
 			return Promise.reject(123);
 		}).then(function() {
 			throw new Error('should not reach');
 		}, function(err) {
 			expect(err).to.equal(123);
-			expect(retryCount).to.equal(3);
+			expect(retryCount).to.equal(5);
+			done();
+		}).catch(done);
+	});
+
+	it('retry with error default', function(done) {
+		var retryCount = 0;
+		var retry = pasync.retry(function() {
+			retryCount++;
+			return Promise.reject(123);
+		}).then(function() {
+			throw new Error('should not reach');
+		}, function(err) {
+			expect(err).to.equal(123);
+			expect(retryCount).to.equal(5);
+			done();
+		}).catch(done);
+	});
+
+	it('retry with error and object param', function(done) {
+		var retryCount = 0;
+		var retry = pasync.retry({times: 12, interval: 8}, function() {
+			retryCount++;
+			return Promise.reject(123);
+		}).then(function() {
+			throw new Error('should not reach');
+		}, function(err) {
+			expect(err).to.equal(123);
+			expect(retryCount).to.equal(12);
 			done();
 		}).catch(done);
 	});
