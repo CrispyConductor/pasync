@@ -963,6 +963,32 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('retry with just task', function(done) {
+		var responseArray = [];
+		var retry = pasync.retry(function() {
+			responseArray.push('a');
+			responseArray.push('b');
+			responseArray.push('c');
+			return Promise.resolve();
+		}).then(function() {
+			expect(responseArray).to.deep.equal(['a', 'b', 'c']);
+			done();
+		}).catch(done);
+	});
+
+	it('retry with object as first argument', function(done) {
+		var responseArray = [];
+		var retry = pasync.retry({times: 12, interval: 8}, function() {
+			responseArray.push('a');
+			responseArray.push('b');
+			responseArray.push('c');
+			return Promise.resolve();
+		}).then(function() {
+			expect(responseArray).to.deep.equal(['a', 'b', 'c']);
+			done();
+		}).catch(done);
+	});
+
 	it('retry with error', function(done) {
 		var retryCount = 0;
 		var retry = pasync.retry(3, function() {
