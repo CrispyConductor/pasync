@@ -1007,6 +1007,34 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('retry with error and just task', function(done) {
+		var retryCount = 0;
+		var retry = pasync.retry(function() {
+			retryCount++;
+			return Promise.reject(123);
+		}).then(function() {
+			throw new Error('should not reach');
+		}, function(err) {
+			expect(err).to.equal(123);
+			expect(retryCount).to.equal(5);
+			done();
+		}).catch(done);
+	});
+
+	it('retry with error and object as first param', function(done) {
+		var retryCount = 0;
+		var retry = pasync.retry({times: 4, interval: 7}, function() {
+			retryCount++;
+			return Promise.reject(123);
+		}).then(function() {
+			throw new Error('should not reach');
+		}, function(err) {
+			expect(err).to.equal(123);
+			expect(retryCount).to.equal(4);
+			done();
+		}).catch(done);
+	});
+
 	it('apply', function(done) {
 	var arr = [0, 1, 2];
 		var responseArray = [];
