@@ -13,6 +13,7 @@
     "watch": "node ./node_modules/mocha/bin/mocha --watch ./test -R spec"
   },
   "dependencies": {
+    "async": "^1.2.1",
     "es6-promise": "^2.0.1",
     "neo-async": "^0.6.2"
   },
