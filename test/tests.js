@@ -1247,6 +1247,13 @@ describe('pasync', function() {
 		done();
 	});
 
+	it('constant', function(done) {
+		pasync.constant('a', 2, 'c').then(function(result) {
+			expect(result).to.deep.equal(['a', 2, 'c']);
+			done();
+		}).catch(done);
+	});
+
 	describe('Neo-Async Improvement of Convenience Support', function() {
 		var testObject = {
 			notRed: 'red',
@@ -2117,7 +2124,6 @@ describe('pasync', function() {
 					done();
 				});
 			});
-
 		});
 	});
 });
