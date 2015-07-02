@@ -76,6 +76,9 @@ have error handling, such as `async.filter` .
 * unmemoize
 * log
 * dir
+* constant
+* asyncify
+* wrapsync
 
 ## Neo-Async Functions Implemented
 

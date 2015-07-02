@@ -1254,6 +1254,66 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('asyncify', function(done) {
+		var testObj = {
+			a: 1,
+			b: 8
+		}
+
+		pasync.asyncify(function() {
+			return testObj;
+		}).then(function(result) {
+			expect(result).to.deep.equal({
+				a: 1,
+				b: 8
+			});
+			done();
+		}).catch(done);
+	});
+
+	it('asyncify with arguments', function(done) {
+		var testFn = function(a, b) {
+			return function() {
+				return a + b;
+			}
+		}
+
+		pasync.asyncify(testFn(1, 2)).then(function(result) {
+			expect(result).to.equal(3);
+			done();
+		}).catch(done);
+	});
+
+	it('wrapSync', function(done) {
+		var testObj = {
+			a: 1,
+			b: 8
+		}
+
+		pasync.wrapSync(function() {
+			return testObj;
+		}).then(function(result) {
+			expect(result).to.deep.equal({
+				a: 1,
+				b: 8
+			});
+			done();
+		}).catch(done);
+	});
+
+	it('wrapSync with arguments', function(done) {
+		var testFn = function(a, b) {
+			return function() {
+				return a + b;
+			}
+		}
+
+		pasync.wrapSync(testFn(1, 2)).then(function(result) {
+			expect(result).to.equal(3);
+			done();
+		}).catch(done);
+	});
+
 	describe('Neo-Async Improvement of Convenience Support', function() {
 		var testObject = {
 			notRed: 'red',
