@@ -541,9 +541,7 @@ describe('pasync', function() {
 		}, function() {
 			return new Promise(function(resolve) {
 				ctr++;
-				setTimeout(function() {
-					resolve();
-				}, 10);
+				resolve();
 			});
 		}).then(function() {
 			expect(ctr).to.equal(10);

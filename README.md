@@ -79,6 +79,8 @@ have error handling, such as `async.filter` .
 * constant
 * asyncify
 * wrapsync
+* during
+* doDuring
 
 ## Neo-Async Functions Implemented
 
