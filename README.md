@@ -1,6 +1,6 @@
 # pasync
 
-![Travis CI Status](https://travis-ci.org/crowelch/pasync.svg?branch=travis)
+![Travis CI Status](https://travis-ci.org/crispy1989/pasync.svg?branch=master)
 
 Version of async that uses promises instead of callbacks.  Also includes other asynchronous
 promise utilities.
