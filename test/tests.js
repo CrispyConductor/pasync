@@ -1298,61 +1298,25 @@ describe('pasync', function() {
 	});
 
 	it('asyncify', function(done) {
-		var testObj = {
-			a: 1,
-			b: 8
-		};
+		var xyz = pasync.asyncify(function(x, y, z) {
+			expect(x).to.equal(1);
+			expect(y).to.equal(2);
+			expect(z).to.equal(3);
+		});
 
-		pasync.asyncify(function() {
-			return testObj;
-		}).then(function(result) {
-			expect(result).to.deep.equal({
-				a: 1,
-				b: 8
-			});
-			done();
-		}).catch(done);
-	});
-
-	it('asyncify with arguments', function(done) {
-		var testFn = function(a, b) {
-			return function() {
-				return a + b;
-			};
-		};
-
-		pasync.asyncify(testFn(1, 2)).then(function(result) {
-			expect(result).to.equal(3);
+		xyz(1, 2, 3).then(function() {
 			done();
 		}).catch(done);
 	});
 
 	it('wrapSync', function(done) {
-		var testObj = {
-			a: 1,
-			b: 8
-		};
+		var xyz = pasync.asyncify(function(x, y, z) {
+			expect(x).to.equal(1);
+			expect(y).to.equal(2);
+			expect(z).to.equal(3);
+		});
 
-		pasync.wrapSync(function() {
-			return testObj;
-		}).then(function(result) {
-			expect(result).to.deep.equal({
-				a: 1,
-				b: 8
-			});
-			done();
-		}).catch(done);
-	});
-
-	it('wrapSync with arguments', function(done) {
-		var testFn = function(a, b) {
-			return function() {
-				return a + b;
-			};
-		};
-
-		pasync.wrapSync(testFn(1, 2)).then(function(result) {
-			expect(result).to.equal(3);
+		xyz(1, 2, 3).then(function() {
 			done();
 		}).catch(done);
 	});
