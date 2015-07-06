@@ -1278,9 +1278,22 @@ describe('pasync', function() {
 	});
 
 	it('constant', function(done) {
+		pasync.constant('Pasync rules!').then(function(result) {
+			result(function(err, word) {
+				expect(word).to.equal('Pasync rules!');
+				done();
+			});
+		}).catch(done);
+	});
+
+	it('constant with multiple arguments', function(done) {
 		pasync.constant('a', 2, 'c').then(function(result) {
-			expect(result).to.deep.equal(['a', 2, 'c']);
-			done();
+			result(function(err, a, b, c) {
+				expect(a).to.equal('a');
+				expect(b).to.equal(2);
+				expect(c).to.equal('c');
+				done();
+			});
 		}).catch(done);
 	});
 
