@@ -1309,6 +1309,20 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('asyncify with error', function(done) {
+		var xyz = pasync.asyncify(function(x, y, z) {
+			throw new Error('err err!');
+		});
+
+		xyz(1, 2, 3).then(function() {
+
+		}, function(err) {
+			console.log(err);
+			expect(err).to.exist;
+			done();
+		}).catch(done);
+	});
+
 	it('wrapSync', function(done) {
 		var xyz = pasync.asyncify(function(x, y, z) {
 			expect(x).to.equal(1);
