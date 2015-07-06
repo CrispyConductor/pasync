@@ -534,6 +534,38 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('during', function(done) {
+		var ctr = 0;
+		pasync.during(function() {
+			return ctr < 10;
+		}, function() {
+			return new Promise(function(resolve) {
+				ctr++;
+				setTimeout(function() {
+					resolve();
+				}, 10);
+			});
+		}).then(function() {
+			expect(ctr).to.equal(10);
+			done();
+		}).catch(done);
+	});
+
+	it('doDuring', function(done) {
+		var ctr = 0;
+		pasync.doDuring(function() {
+			return new Promise(function(resolve) {
+				ctr++;
+				resolve();
+			});
+		}, function() {
+			return ctr < 10;
+		}).then(function() {
+			expect(ctr).to.equal(10);
+			done();
+		}).catch(done);
+	});
+
 	it('until', function(done) {
 		var ctr = 0;
 		pasync.until(function() {
@@ -1258,7 +1290,7 @@ describe('pasync', function() {
 		var testObj = {
 			a: 1,
 			b: 8
-		}
+		};
 
 		pasync.asyncify(function() {
 			return testObj;
@@ -1275,8 +1307,8 @@ describe('pasync', function() {
 		var testFn = function(a, b) {
 			return function() {
 				return a + b;
-			}
-		}
+			};
+		};
 
 		pasync.asyncify(testFn(1, 2)).then(function(result) {
 			expect(result).to.equal(3);
@@ -1288,7 +1320,7 @@ describe('pasync', function() {
 		var testObj = {
 			a: 1,
 			b: 8
-		}
+		};
 
 		pasync.wrapSync(function() {
 			return testObj;
@@ -1305,8 +1337,8 @@ describe('pasync', function() {
 		var testFn = function(a, b) {
 			return function() {
 				return a + b;
-			}
-		}
+			};
+		};
 
 		pasync.wrapSync(testFn(1, 2)).then(function(result) {
 			expect(result).to.equal(3);
