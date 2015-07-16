@@ -76,6 +76,11 @@ have error handling, such as `async.filter` .
 * unmemoize
 * log
 * dir
+* constant
+* asyncify
+* wrapsync
+* during
+* doDuring
 
 ## Neo-Async Functions Implemented
 
@@ -109,6 +114,9 @@ have error handling, such as `async.filter` .
 ## Other Utilities
 
 ### all([promises])
+
+#### Note
+async.all is an alias for async.every. pasync.all is the function described here, not an alias for every.
 
 This is similar to ES6's `Promise.all()`, but with the following differences and enhancements:
 

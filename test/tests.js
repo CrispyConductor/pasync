@@ -538,6 +538,36 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('during', function(done) {
+		var ctr = 0;
+		pasync.during(function() {
+			return ctr < 10;
+		}, function() {
+			return new Promise(function(resolve) {
+				ctr++;
+				resolve();
+			});
+		}).then(function() {
+			expect(ctr).to.equal(10);
+			done();
+		}).catch(done);
+	});
+
+	it('doDuring', function(done) {
+		var ctr = 0;
+		pasync.doDuring(function() {
+			return new Promise(function(resolve) {
+				ctr++;
+				resolve();
+			});
+		}, function() {
+			return ctr < 10;
+		}).then(function() {
+			expect(ctr).to.equal(10);
+			done();
+		}).catch(done);
+	});
+
 	it('until', function(done) {
 		var ctr = 0;
 		pasync.until(function() {
@@ -967,7 +997,7 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
-	it('retry with just task', function(done) {
+	it('retry with no times param', function(done) {
 		var responseArray = [];
 		var retry = pasync.retry(function() {
 			responseArray.push('a');
@@ -980,9 +1010,9 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
-	it('retry with object as first argument', function(done) {
+	it('retry with object param', function(done) {
 		var responseArray = [];
-		var retry = pasync.retry({times: 4, interval: 7}, function() {
+		var retry = pasync.retry({times: 12, interval: 8}, function() {
 			responseArray.push('a');
 			responseArray.push('b');
 			responseArray.push('c');
@@ -995,14 +1025,42 @@ describe('pasync', function() {
 
 	it('retry with error', function(done) {
 		var retryCount = 0;
-		var retry = pasync.retry(3, function() {
+		var retry = pasync.retry(function() {
 			retryCount++;
 			return Promise.reject(123);
 		}).then(function() {
 			throw new Error('should not reach');
 		}, function(err) {
 			expect(err).to.equal(123);
-			expect(retryCount).to.equal(3);
+			expect(retryCount).to.equal(5);
+			done();
+		}).catch(done);
+	});
+
+	it('retry with error default', function(done) {
+		var retryCount = 0;
+		var retry = pasync.retry(function() {
+			retryCount++;
+			return Promise.reject(123);
+		}).then(function() {
+			throw new Error('should not reach');
+		}, function(err) {
+			expect(err).to.equal(123);
+			expect(retryCount).to.equal(5);
+			done();
+		}).catch(done);
+	});
+
+	it('retry with error and object param', function(done) {
+		var retryCount = 0;
+		var retry = pasync.retry({times: 12, interval: 8}, function() {
+			retryCount++;
+			return Promise.reject(123);
+		}).then(function() {
+			throw new Error('should not reach');
+		}, function(err) {
+			expect(err).to.equal(123);
+			expect(retryCount).to.equal(12);
 			done();
 		}).catch(done);
 	});
@@ -1249,6 +1307,64 @@ describe('pasync', function() {
 
 		pasync.dir(dirFn, 2, 3);
 		done();
+	});
+
+	it('constant', function(done) {
+		pasync.constant('Pasync rules!').then(function(result) {
+			result(function(err, word) {
+				expect(word).to.equal('Pasync rules!');
+				done();
+			});
+		}).catch(done);
+	});
+
+	it('constant with multiple arguments', function(done) {
+		pasync.constant('a', 2, 'c').then(function(result) {
+			result(function(err, a, b, c) {
+				expect(a).to.equal('a');
+				expect(b).to.equal(2);
+				expect(c).to.equal('c');
+				done();
+			});
+		}).catch(done);
+	});
+
+	it('asyncify', function(done) {
+		var xyz = pasync.asyncify(function(x, y, z) {
+			expect(x).to.equal(1);
+			expect(y).to.equal(2);
+			expect(z).to.equal(3);
+		});
+
+		xyz(1, 2, 3).then(function() {
+			done();
+		}).catch(done);
+	});
+
+	it('asyncify with error', function(done) {
+		var xyz = pasync.asyncify(function(x, y, z) {
+			throw new Error('err err!');
+		});
+
+		xyz(1, 2, 3).then(function() {
+
+		}, function(err) {
+			console.log(err);
+			expect(err).to.exist;
+			done();
+		}).catch(done);
+	});
+
+	it('wrapSync', function(done) {
+		var xyz = pasync.asyncify(function(x, y, z) {
+			expect(x).to.equal(1);
+			expect(y).to.equal(2);
+			expect(z).to.equal(3);
+		});
+
+		xyz(1, 2, 3).then(function() {
+			done();
+		}).catch(done);
 	});
 
 	describe('Neo-Async Improvement of Convenience Support', function() {
@@ -2146,7 +2262,6 @@ describe('pasync', function() {
 					done();
 				});
 			});
-
 		});
 	});
 });
