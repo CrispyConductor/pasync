@@ -4,6 +4,12 @@ var expect = require('chai').expect;
 var pasync = require('../lib/index');
 var Promise = require('es6-promise').Promise;
 
+function setTimeoutPromise(t) {
+	return new Promise(function(resolve) {
+		setTimeout(resolve, t);
+	});
+}
+
 describe('pasync', function() {
 
 	it('each with promises', function(done) {
@@ -2263,5 +2269,133 @@ describe('pasync', function() {
 				});
 			});
 		});
+
+		describe('waiter', function() {
+
+			it('should resolve all listeners when resolve is called', function() {
+				var waiter = pasync.waiter();
+				var results = [];
+				var errors = [];
+				waiter.promise.then(function(result) {
+					results.push(result);
+				}, function(err) {
+					errors.push(err);
+				});
+				waiter.promise.then(function(result) {
+					results.push(result);
+				}, function(err) {
+					errors.push(err);
+				});
+				waiter.resolve('foo');
+				return setTimeoutPromise(10)
+					.then(function() {
+						waiter.promise.then(function(result) {
+							results.push(result);
+						}, function(err) {
+							errors.push(err);
+						});
+						return setTimeoutPromise(10);
+					})
+					.then(function() {
+						expect(results).to.deep.equal([ 'foo', 'foo', 'foo' ]);
+						expect(errors).to.deep.equal([]);
+					});
+			});
+
+			it('should reject all listeners when reject is called', function() {
+				var waiter = pasync.waiter();
+				var results = [];
+				var errors = [];
+				waiter.promise.then(function(result) {
+					results.push(result);
+				}, function(err) {
+					errors.push(err);
+				});
+				waiter.promise.then(function(result) {
+					results.push(result);
+				}, function(err) {
+					errors.push(err);
+				});
+				waiter.reject('foo');
+				return setTimeoutPromise(10)
+					.then(function() {
+						waiter.promise.then(function(result) {
+							results.push(result);
+						}, function(err) {
+							errors.push(err);
+						});
+						return setTimeoutPromise(10);
+					})
+					.then(function() {
+						expect(results).to.deep.equal([]);
+						expect(errors).to.deep.equal([ 'foo', 'foo', 'foo' ]);
+					});
+			});
+
+			it('should not reset if promise has not yet finished', function() {
+				var waiter = pasync.waiter();
+				var results = [];
+				var errors = [];
+				waiter.promise.then(function(result) {
+					results.push(result);
+				}, function(err) {
+					errors.push(err);
+				});
+				waiter.reset();
+				waiter.promise.then(function(result) {
+					results.push(result);
+				}, function(err) {
+					errors.push(err);
+				});
+				waiter.resolve('foo');
+				return setTimeoutPromise(10)
+					.then(function() {
+						waiter.promise.then(function(result) {
+							results.push(result);
+						}, function(err) {
+							errors.push(err);
+						});
+						return setTimeoutPromise(10);
+					})
+					.then(function() {
+						expect(results).to.deep.equal([ 'foo', 'foo', 'foo' ]);
+						expect(errors).to.deep.equal([]);
+					});
+			});
+
+			it('should automatically reset if already finished', function() {
+				var waiter = pasync.waiter();
+				var results = [];
+				var errors = [];
+				waiter.resolve('foo');
+				waiter.promise.then(function(result) {
+					results.push(result);
+				}, function(err) {
+					errors.push(err);
+				});
+				waiter.reject('bar');
+				waiter.promise.then(function(result) {
+					results.push(result);
+				}, function(err) {
+					errors.push(err);
+				});
+				waiter.resolve('baz');
+				return setTimeoutPromise(10)
+					.then(function() {
+						waiter.promise.then(function(result) {
+							results.push(result);
+						}, function(err) {
+							errors.push(err);
+						});
+						return setTimeoutPromise(10);
+					})
+					.then(function() {
+						expect(results).to.deep.equal([ 'foo', 'baz' ]);
+						expect(errors).to.deep.equal([ 'bar' ]);
+					});
+			});
+
+		});
+
 	});
 });

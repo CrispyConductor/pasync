@@ -160,6 +160,38 @@ getUser(nonexistent_id).then(function(user) {
 }).catch(pasync.abort);	// This will catch the undefined variable error and throw it globally
 ```
 
+### waiter()
+
+This returns an object that encapsulates a promise and can be resolved from different contexts.
+The behavior is as follows:
+
+* `promise` is the ensapsulated promise, and resolves or rejects when resolve/reject are called.
+* `resolve(res)` resolves the promise.  If the encapsulated promise has already resolved or rejected,
+  a new promise is created.
+* `reject(err)` rejects the promise.  If the encapsulated promise has already rejected, a new promise
+  is created.
+* `reset()` creates a new unresolved promise if the promise has already been resolved or rejected.
+
+This acts like a deferred, but one where the promise can be re-resolved or re-rejected.  If `resolve()`
+or `reject()` are called and the promise has already been resolved/rejected, a new promise is constructed.
+
+```js
+var waiter = pasync.waiter();
+
+waiter.promise.then(function(db) {
+  db.get(...)
+});
+
+waiter.promise.then(function(db) {
+  db.get(...)
+});
+
+connectToDatabase.then(function(db) {
+  waiter.resolve(db);
+})
+
+```
+
 ## Contributors
 
 - crispy1989
