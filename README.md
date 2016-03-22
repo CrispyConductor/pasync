@@ -143,6 +143,16 @@ p.push(promise3);
 p.push(promise4);
 ```
 
+### setTimeout(ms)
+
+Just a promisified javascript setTimeout.
+
+```js
+pasync.setTimeout(100).then(function() {
+	console.log('Waited 100 milliseconds.');
+});
+```
+
 ### abort(err)
 
 This is intended to be used as a last-ditch error handler for promises.  Using
@@ -196,4 +206,3 @@ connectToDatabase.then(function(db) {
 
 - crispy1989
 - crowelch
-

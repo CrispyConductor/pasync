@@ -2169,6 +2169,10 @@ describe('pasync', function() {
 			}).catch(pasync.abort);
 		});
 
+		it('setTimeout', function(done) {
+			pasync.setTimeout(50).then(done);
+		});
+
 		describe('all', function() {
 
 			it('result order', function(done) {
