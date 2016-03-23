@@ -1167,6 +1167,16 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('times with mapped result', function(done) {
+		var timesCount = 0;
+		pasync.times(5, function(n, next) {
+			return Promise.resolve(n);
+		}).then(function(result) {
+			expect(result).to.deep.equal([ 0, 1, 2, 3, 4 ]);
+			done();
+		}).catch(done);
+	});
+
 	it('timesSeries', function(done) {
 		var timesCount = 0;
 		var timesTest = 2;
@@ -1188,6 +1198,16 @@ describe('pasync', function() {
 			throw new Error('should not reach');
 		}, function(err) {
 			expect(err).to.equal(123);
+			done();
+		}).catch(done);
+	});
+
+	it('timesSeries with mapped result', function(done) {
+		var timesCount = 0;
+		pasync.timesSeries(5, function(n, next) {
+			return Promise.resolve(n);
+		}).then(function(result) {
+			expect(result).to.deep.equal([ 0, 1, 2, 3, 4 ]);
 			done();
 		}).catch(done);
 	});
@@ -2167,6 +2187,10 @@ describe('pasync', function() {
 			}).then(function() {
 				throw 123;
 			}).catch(pasync.abort);
+		});
+
+		it('setTimeout', function(done) {
+			pasync.setTimeout(50).then(done);
 		});
 
 		describe('all', function() {
