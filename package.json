@@ -1,6 +1,6 @@
 {
   "name": "pasync",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "license": "MIT",
   "description": "Promise-oriented async",
   "main": "./lib/index.js",
