@@ -2151,13 +2151,14 @@ describe('pasync', function() {
 		it('timesLimit', function(done) {
 			var timesCount = 0;
 			var timesTest = 2;
-			pasync.timesLimit(8, 2, function(n, next) {
+			return pasync.timesLimit(8, 2, function(n, next) {
 				timesCount++;
 				timesTest = timesTest * 2;
-				return Promise.resolve();
-			}).then(function() {
+				return Promise.resolve(timesCount);
+			}).then(function(result) {
 				expect(timesCount).to.equal(8);
 				expect(timesTest).to.equal(512);
+				expect(result).to.deep.equal([ 1, 2, 3, 4, 5, 6, 7, 8 ]);
 				done();
 			}).catch(done);
 		});
