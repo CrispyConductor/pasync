@@ -2194,6 +2194,10 @@ describe('pasync', function() {
 			pasync.setTimeout(50).then(done);
 		});
 
+		it('setImmediate', function(done) {
+			pasync.setImmediate().then(done);
+		});
+
 		describe('all', function() {
 
 			it('result order', function(done) {

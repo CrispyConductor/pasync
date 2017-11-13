@@ -153,6 +153,17 @@ pasync.setTimeout(100).then(function() {
 });
 ```
 
+### setImmediate()
+
+Same as above, but for setImmediate.
+
+```js
+pasync.setImmediate().then(function() {
+	console.log('Waited until after I/O event callbacks.');
+});
+```
+
+
 ### abort(err)
 
 This is intended to be used as a last-ditch error handler for promises.  Using
