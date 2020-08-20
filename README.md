@@ -41,10 +41,7 @@ have error handling, such as `async.filter` .
 * reject
 * rejectSeries
 * reduce
-* inject
-* foldl
 * reduceRight
-* foldr
 * detect
 * detectSeries
 * sortBy
@@ -62,56 +59,17 @@ have error handling, such as `async.filter` .
 * forever
 * waterfall
 * compose
-* seq
 * applyEach
 * applyEachSeries
-* queue
-* priorityQueue
-* cargo
-* auto
 * retry
 * apply
 * nextTick
 * times
 * timesSeries
-* memoize
-* unmemoize
-* log
-* dir
-* constant
 * asyncify
-* wrapsync
+* wrapSync
 * during
 * doDuring
-
-## Neo-Async Functions Implemented
-
-* concatLimit
-* mapValues
-* mapValuesSeries
-* mapValuesLimit
-* detectLimit
-* everySeries
-* everyLimit
-* filterLimit
-* pick
-* pickSeries
-* pickLimit
-* rejectLimit
-* selectLimit
-* someSeries
-* someLimit
-* sortBySeries
-* sortByLimit
-* transform
-* transformSeries
-* transformLimit
-* timesLimit
-
-## Functions not implemented
-
-* iterator
-* noConflict
 
 ## Other Utilities
 
