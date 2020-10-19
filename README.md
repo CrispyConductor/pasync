@@ -34,6 +34,9 @@ have error handling, such as `async.filter` .
 * map
 * mapSeries
 * mapLimit
+* mapValues
+* mapValuesSeries
+* mapValuesLimit
 * filter
 * select
 * filterSeries
@@ -58,6 +61,7 @@ have error handling, such as `async.filter` .
 * doUntil
 * forever
 * waterfall
+* queue
 * compose
 * applyEach
 * applyEachSeries

@@ -178,6 +178,64 @@ describe('pasync', function() {
 		}).catch(done);
 	});
 
+	it('mapValues as object', function(done) {
+		var arr = {
+			hello: 1,
+			goodbye: 2,
+			dough: 3
+		};
+		pasync.mapValues(arr, function(el) {
+			return el + 1;
+		}).then(function(res) {
+			expect(res).to.deep.equal({
+				hello: 2,
+				goodbye: 3,
+				dough: 4
+			});
+			done();
+		}).catch(done);
+	});
+
+	it('mapValuesSeries as object', function(done) {
+		var arr = {
+			hello: 1,
+			goodbye: 2,
+			dough: 3
+		};
+		pasync.mapValuesSeries(arr, function(el) {
+			return el + 1;
+		}).then(function(res) {
+			expect(res).to.deep.equal({
+				hello: 2,
+				goodbye: 3,
+				dough: 4
+			});
+			done();
+		}).catch(done);
+	});
+
+	it('mapValuesLimit', function(done) {
+		var arr = {
+			hello: 1,
+			goodbye: 2,
+			dough: 3
+		};
+		pasync.mapValuesLimit(arr, 2, function(el) {
+			return new Promise(function(resolve) {
+				setImmediate(function() {
+					resolve(el + 1);
+				});
+			});
+		}).then(function(res) {
+			expect(res).to.deep.equal({
+				hello: 2,
+				goodbye: 3,
+				dough: 4
+			});
+			done();
+		}).catch(done);
+	});
+
 	it('filter', function(done) {
 		var arr = [1, 2, 3];
 		pasync.filter(arr, function(el) {
@@ -758,6 +816,59 @@ describe('pasync', function() {
 			expect(resultArray).to.deep.equal([4, 5, 4, 5, 4, 5]);
 			done();
 		}).catch(done);
+	});
+
+	it('queue', function(done) {
+		var responseQueue = [];
+		var queue = pasync.queue(function(task) {
+			return new Promise(function(resolve, reject) {
+				pasync.setTimeout(50).then(function() {
+					responseQueue.push(task * 2);
+					resolve();
+				});
+			});
+		}, 2);
+
+		queue.unshift(1);
+		queue.push([2, 3, 4, 5]);
+
+		queue.error(done);
+		queue.drain(function() {
+			expect(responseQueue).to.deep.equal([2, 4, 6, 8, 10]);
+			done();
+		});
+	});
+
+	it('queue with error', function(done) {
+		var responseQueue = [];
+		var queue = pasync.queue(function(task) {
+			return new Promise(function(resolve, reject) {
+				pasync.setTimeout(50).then(function() {
+					if(task === 4) {
+						reject(123);
+					} else {
+						responseQueue.push(task * 2);
+						resolve();
+					}
+				});
+			});
+		}, 2);
+
+		queue.unshift(1);
+		queue.push([2, 3]);
+		queue.push(4);
+		queue.push(5);
+
+		var gotError = false;
+		queue.error(function(err) {
+			if (err !== 123) return done(err);
+			gotError = true;
+		});
+		queue.drain(function() {
+			expect(responseQueue).to.deep.equal([2, 4, 6, 10]);
+			expect(gotError).to.equal(true);
+			done();
+		});
 	});
 
 	it('retry', function(done) {
