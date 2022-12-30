@@ -20,7 +20,7 @@
   "devDependencies": {
     "chai": "^2.0.0",
     "jshint": "^2.6.0",
-    "mocha": "8.1.1",
+    "mocha": "8.4.0",
     "spectrophotometer": "^3.0.2"
   },
   "engines": {
